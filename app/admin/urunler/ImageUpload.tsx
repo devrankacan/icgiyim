@@ -18,18 +18,23 @@ export default function ImageUpload({ value, onChange }: Props) {
     setUploading(true)
     setError('')
 
-    const formData = new FormData()
-    formData.append('file', file)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
 
-    const res = await fetch('/api/upload', { method: 'POST', body: formData })
-    const data = await res.json()
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      const data = await res.json()
 
-    if (res.ok) {
-      onChange(data.url)
-    } else {
-      setError(data.error || 'Yükleme başarısız')
+      if (res.ok) {
+        onChange(data.url)
+      } else {
+        setError(data.error || 'Yükleme başarısız')
+      }
+    } catch {
+      setError('Bağlantı hatası, tekrar deneyin')
+    } finally {
+      setUploading(false)
     }
-    setUploading(false)
   }
 
   function handleDrop(e: React.DragEvent) {
@@ -42,7 +47,7 @@ export default function ImageUpload({ value, onChange }: Props) {
     <div>
       {value ? (
         <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-700">
-          <Image src={value} alt="Ürün görseli" fill className="object-cover" />
+          <Image src={value} alt="Ürün görseli" fill className="object-cover" unoptimized />
           <button
             type="button"
             onClick={() => onChange('')}
@@ -55,11 +60,14 @@ export default function ImageUpload({ value, onChange }: Props) {
         <div
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
-          onClick={() => inputRef.current?.click()}
+          onClick={() => !uploading && inputRef.current?.click()}
           className="w-full h-48 border-2 border-dashed border-gray-700 hover:border-rose-500 rounded-lg flex flex-col items-center justify-center gap-3 cursor-pointer transition-colors"
         >
           {uploading ? (
-            <p className="text-sm text-gray-400">Yükleniyor...</p>
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-6 h-6 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+              <p className="text-sm text-gray-400">Yükleniyor...</p>
+            </div>
           ) : (
             <>
               <Upload size={24} className="text-gray-500" />
@@ -77,11 +85,12 @@ export default function ImageUpload({ value, onChange }: Props) {
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp,image/gif"
         className="hidden"
         onChange={(e) => {
           const file = e.target.files?.[0]
           if (file) handleFile(file)
+          e.target.value = ''
         }}
       />
     </div>

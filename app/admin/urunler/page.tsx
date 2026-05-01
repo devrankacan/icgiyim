@@ -12,12 +12,20 @@ export default function AdminUrunlerPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-white">Ürünler</h1>
-        <Link
-          href="/admin/urunler/yeni"
-          className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white text-sm rounded-lg transition-colors"
-        >
-          <Plus size={16} /> Yeni Ürün
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/admin/urunler/gorseller"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+          >
+            Görseller
+          </Link>
+          <Link
+            href="/admin/urunler/yeni"
+            className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white text-sm rounded-lg transition-colors"
+          >
+            <Plus size={16} /> Yeni Ürün
+          </Link>
+        </div>
       </div>
 
       <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
