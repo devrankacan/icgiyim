@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getProducts } from '@/lib/store'
-import { Plus } from 'lucide-react'
+import { Plus, Package } from 'lucide-react'
 import DeleteButton from './DeleteButton'
 
 export const dynamic = 'force-dynamic'
