@@ -49,17 +49,15 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 <div className={`w-full h-full ${product.gradient}`} />
               )}
             </div>
-            <div className="grid grid-cols-4 gap-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className={`relative aspect-square overflow-hidden ${i !== 1 ? 'opacity-60 hover:opacity-100 transition-opacity duration-200' : ''} cursor-pointer`}>
-                  {product.image ? (
-                    <Image src={product.image} alt={product.name} fill unoptimized className="object-cover" sizes="10vw" />
-                  ) : (
-                    <div className={`w-full h-full ${product.gradient}`} />
-                  )}
-                </div>
-              ))}
-            </div>
+            {product.images && product.images.length > 0 && (
+              <div className="grid grid-cols-4 gap-3">
+                {product.images.slice(0, 4).map((img, i) => (
+                  <div key={i} className={`relative aspect-square overflow-hidden cursor-pointer ${i !== 0 ? 'opacity-60 hover:opacity-100 transition-opacity duration-200' : ''}`}>
+                    <Image src={img} alt={`${product.name} ${i + 1}`} fill unoptimized className="object-cover" sizes="10vw" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>

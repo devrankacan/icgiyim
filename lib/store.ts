@@ -14,6 +14,7 @@ export interface Product {
   colors: string[]
   gradient: string
   image?: string
+  images?: string[]
   badge?: string
   isNew?: boolean
   isBestseller?: boolean
