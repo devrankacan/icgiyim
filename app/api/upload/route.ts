@@ -2,39 +2,40 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 
-export const runtime = 'nodejs'
-
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData()
-    const file = formData.get('file') as File
+    const { file, filename, type } = await req.json()
 
-    if (!file || typeof file === 'string') {
-      return NextResponse.json({ error: 'Dosya bulunamadı' }, { status: 400 })
+    if (!file || !filename || !type) {
+      return NextResponse.json({ error: 'Eksik veri' }, { status: 400 })
     }
 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/jpg']
-    if (!allowedTypes.includes(file.type)) {
+    if (!allowedTypes.includes(type)) {
       return NextResponse.json({ error: 'Sadece JPG, PNG, WebP yüklenebilir' }, { status: 400 })
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json({ error: 'Dosya boyutu 5MB\'ı geçemez' }, { status: 400 })
+    const base64Data = file.split(',')[1]
+    if (!base64Data) {
+      return NextResponse.json({ error: 'Geçersiz dosya formatı' }, { status: 400 })
     }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    const buffer = Buffer.from(base64Data, 'base64')
+
+    if (buffer.length > 5 * 1024 * 1024) {
+      return NextResponse.json({ error: 'Dosya boyutu 5MB\'ı geçemez' }, { status: 400 })
+    }
 
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
     await mkdir(uploadsDir, { recursive: true })
 
-    const ext = path.extname(file.name).toLowerCase() || '.jpg'
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`
-    await writeFile(path.join(uploadsDir, filename), buffer)
+    const ext = path.extname(filename).toLowerCase() || '.jpg'
+    const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`
+    await writeFile(path.join(uploadsDir, uniqueName), buffer)
 
-    return NextResponse.json({ url: `/uploads/${filename}` })
+    return NextResponse.json({ url: `/uploads/${uniqueName}` })
   } catch (err) {
     console.error('Upload error:', err)
-    return NextResponse.json({ error: 'Sunucu hatası: ' + String(err) }, { status: 500 })
+    return NextResponse.json({ error: 'Sunucu hatası' }, { status: 500 })
   }
 }

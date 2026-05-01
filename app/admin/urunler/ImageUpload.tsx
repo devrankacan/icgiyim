@@ -19,10 +19,14 @@ export default function ImageUpload({ value, onChange }: Props) {
     setError('')
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
+      const base64 = await toBase64(file)
 
-      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ file: base64, filename: file.name, type: file.type }),
+      })
+
       const data = await res.json()
 
       if (res.ok) {
@@ -30,11 +34,20 @@ export default function ImageUpload({ value, onChange }: Props) {
       } else {
         setError(data.error || 'Yükleme başarısız')
       }
-    } catch {
-      setError('Bağlantı hatası, tekrar deneyin')
+    } catch (err) {
+      setError('Hata: ' + String(err))
     } finally {
       setUploading(false)
     }
+  }
+
+  function toBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = reject
+    })
   }
 
   function handleDrop(e: React.DragEvent) {

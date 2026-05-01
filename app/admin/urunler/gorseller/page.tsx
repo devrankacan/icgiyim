@@ -22,13 +22,25 @@ export default function GorsellerPage() {
     fetch('/api/products').then((r) => r.json()).then(setProducts)
   }, [])
 
+  function toBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = reject
+    })
+  }
+
   async function handleFile(productId: string, file: File) {
     setUploading(productId)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
+      const base64 = await toBase64(file)
+      const uploadRes = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ file: base64, filename: file.name, type: file.type }),
+      })
       const { url, error } = await uploadRes.json()
 
       if (!uploadRes.ok) {
