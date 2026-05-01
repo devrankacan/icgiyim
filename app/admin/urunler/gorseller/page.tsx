@@ -22,12 +22,25 @@ export default function GorsellerPage() {
     fetch('/api/products').then((r) => r.json()).then(setProducts)
   }, [])
 
-  function toBase64(file: File): Promise<string> {
+  function resizeImage(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = reject
+      const img = document.createElement('img')
+      const objectUrl = URL.createObjectURL(file)
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl)
+        const maxSize = 1200
+        const canvas = document.createElement('canvas')
+        let { width, height } = img
+        if (width > maxSize || height > maxSize) {
+          if (width > height) { height = Math.round((height * maxSize) / width); width = maxSize }
+          else { width = Math.round((width * maxSize) / height); height = maxSize }
+        }
+        canvas.width = width; canvas.height = height
+        canvas.getContext('2d')!.drawImage(img, 0, 0, width, height)
+        resolve(canvas.toDataURL('image/jpeg', 0.85))
+      }
+      img.onerror = reject
+      img.src = objectUrl
     })
   }
 
@@ -35,13 +48,16 @@ export default function GorsellerPage() {
     setUploading(productId)
 
     try {
-      const base64 = await toBase64(file)
+      const base64 = await resizeImage(file)
       const uploadRes = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ file: base64, filename: file.name, type: file.type }),
+        body: JSON.stringify({ file: base64, filename: file.name, type: 'image/jpeg' }),
       })
-      const { url, error } = await uploadRes.json()
+      const text = await uploadRes.text()
+      let parsed: { url?: string; error?: string }
+      try { parsed = JSON.parse(text) } catch { alert('Sunucu hatası: ' + text.slice(0, 100)); return }
+      const { url, error } = parsed
 
       if (!uploadRes.ok) {
         alert(error || 'Yükleme başarısız')

@@ -9,6 +9,29 @@ interface Props {
   onChange: (url: string) => void
 }
 
+function resizeImage(file: File, maxSize = 1200): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = document.createElement('img')
+    const url = URL.createObjectURL(file)
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      const canvas = document.createElement('canvas')
+      let { width, height } = img
+      if (width > maxSize || height > maxSize) {
+        if (width > height) { height = Math.round((height * maxSize) / width); width = maxSize }
+        else { width = Math.round((width * maxSize) / height); height = maxSize }
+      }
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d')!
+      ctx.drawImage(img, 0, 0, width, height)
+      resolve(canvas.toDataURL('image/jpeg', 0.85))
+    }
+    img.onerror = reject
+    img.src = url
+  })
+}
+
 export default function ImageUpload({ value, onChange }: Props) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState('')
@@ -19,35 +42,28 @@ export default function ImageUpload({ value, onChange }: Props) {
     setError('')
 
     try {
-      const base64 = await toBase64(file)
+      const base64 = await resizeImage(file)
 
       const res = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ file: base64, filename: file.name, type: file.type }),
+        body: JSON.stringify({ file: base64, filename: file.name, type: 'image/jpeg' }),
       })
 
-      const data = await res.json()
+      const text = await res.text()
+      let data: { url?: string; error?: string }
+      try { data = JSON.parse(text) } catch { throw new Error('Sunucu yanıtı: ' + text.slice(0, 100)) }
 
-      if (res.ok) {
+      if (res.ok && data.url) {
         onChange(data.url)
       } else {
         setError(data.error || 'Yükleme başarısız')
       }
     } catch (err) {
-      setError('Hata: ' + String(err))
+      setError(String(err))
     } finally {
       setUploading(false)
     }
-  }
-
-  function toBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = reject
-    })
   }
 
   function handleDrop(e: React.DragEvent) {
@@ -86,14 +102,14 @@ export default function ImageUpload({ value, onChange }: Props) {
               <Upload size={24} className="text-gray-500" />
               <div className="text-center">
                 <p className="text-sm text-gray-400">Tıkla veya sürükle bırak</p>
-                <p className="text-xs text-gray-600 mt-1">JPG, PNG, WebP — maks. 5MB</p>
+                <p className="text-xs text-gray-600 mt-1">JPG, PNG, WebP</p>
               </div>
             </>
           )}
         </div>
       )}
 
-      {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
+      {error && <p className="text-red-400 text-xs mt-2 break-all">{error}</p>}
 
       <input
         ref={inputRef}
