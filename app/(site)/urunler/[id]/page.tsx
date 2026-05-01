@@ -44,7 +44,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           <div className="space-y-4">
             <div className={`relative aspect-[3/4] w-full overflow-hidden`}>
               {product.image ? (
-                <Image src={product.image} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+                <Image src={product.image} alt={product.name} fill unoptimized className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
               ) : (
                 <div className={`w-full h-full ${product.gradient}`} />
               )}
@@ -53,7 +53,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className={`relative aspect-square overflow-hidden ${i !== 1 ? 'opacity-60 hover:opacity-100 transition-opacity duration-200' : ''} cursor-pointer`}>
                   {product.image ? (
-                    <Image src={product.image} alt={product.name} fill className="object-cover" sizes="10vw" />
+                    <Image src={product.image} alt={product.name} fill unoptimized className="object-cover" sizes="10vw" />
                   ) : (
                     <div className={`w-full h-full ${product.gradient}`} />
                   )}
