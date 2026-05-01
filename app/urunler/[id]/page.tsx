@@ -1,12 +1,10 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronRight, Heart, Share2, Shield, Truck, RotateCcw } from 'lucide-react'
-import { getProductById, products } from '@/lib/data'
+import { getProductById, getProducts } from '@/lib/data'
 import ProductCard from '@/components/ProductCard'
 
-export function generateStaticParams() {
-  return products.map((p) => ({ id: p.id }))
-}
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = getProductById(params.id)
@@ -21,13 +19,13 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const product = getProductById(params.id)
   if (!product) notFound()
 
+  const products = getProducts()
   const related = products
     .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
     .slice(0, 4)
 
   return (
     <div className="pt-28 pb-24">
-      {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
         <nav className="flex items-center gap-2 text-xs text-muted">
           <Link href="/" className="hover:text-accent transition-colors duration-200">Ana Sayfa</Link>
@@ -40,10 +38,8 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
         </nav>
       </div>
 
-      {/* Product */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* Image */}
           <div className="space-y-4">
             <div className={`aspect-[3/4] ${product.gradient} w-full`} />
             <div className="grid grid-cols-4 gap-3">
@@ -53,7 +49,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             </div>
           </div>
 
-          {/* Info */}
           <div>
             <p className="text-xs text-accent tracking-[0.3em] uppercase mb-3">{product.category}</p>
             <h1 className="font-serif text-4xl md:text-5xl font-medium text-primary-color mb-4">
@@ -73,27 +68,21 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             </div>
 
             <div className="w-full h-px bg-[var(--border)] mb-6" />
-
             <p className="text-sm text-secondary leading-relaxed mb-8">{product.description}</p>
 
-            {/* Colors */}
             <div className="mb-6">
               <p className="text-xs font-medium tracking-[0.2em] uppercase text-primary-color mb-3">
                 Renk: <span className="text-accent">{product.colors[0]}</span>
               </p>
               <div className="flex flex-wrap gap-2">
                 {product.colors.map((color) => (
-                  <button
-                    key={color}
-                    className="px-4 py-2 text-xs border border-[var(--border)] text-secondary hover:border-accent hover:text-accent transition-all duration-200"
-                  >
+                  <button key={color} className="px-4 py-2 text-xs border border-[var(--border)] text-secondary hover:border-accent hover:text-accent transition-all duration-200">
                     {color}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Sizes */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-xs font-medium tracking-[0.2em] uppercase text-primary-color">Beden</p>
@@ -101,21 +90,15 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               </div>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((size) => (
-                  <button
-                    key={size}
-                    className="px-4 py-2 text-xs border border-[var(--border)] text-secondary hover:border-accent hover:text-accent transition-all duration-200"
-                  >
+                  <button key={size} className="px-4 py-2 text-xs border border-[var(--border)] text-secondary hover:border-accent hover:text-accent transition-all duration-200">
                     {size}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex gap-3 mb-8">
-              <button className="btn-primary flex-1">
-                Sepete Ekle
-              </button>
+              <button className="btn-primary flex-1">Sepete Ekle</button>
               <button className="w-12 h-12 border border-[var(--border)] flex items-center justify-center hover:border-accent transition-colors duration-200" aria-label="Favorilere Ekle">
                 <Heart size={18} className="text-secondary" />
               </button>
@@ -124,7 +107,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               </button>
             </div>
 
-            {/* Guarantees */}
             <div className="space-y-3 border border-[var(--border)] p-5">
               {[
                 { icon: Truck, text: '500₺ üzeri siparişlerde ücretsiz kargo' },
@@ -138,7 +120,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               ))}
             </div>
 
-            {/* Details */}
             <div className="mt-8">
               <h3 className="text-xs font-medium tracking-[0.2em] uppercase text-primary-color mb-4">Ürün Detayları</h3>
               <ul className="space-y-2">
@@ -153,7 +134,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           </div>
         </div>
 
-        {/* Related */}
         {related.length > 0 && (
           <div className="mt-24">
             <div className="text-center mb-12">

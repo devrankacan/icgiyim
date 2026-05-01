@@ -1,12 +1,10 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
-import { getCategoryBySlug, getProductsByCategory, categories } from '@/lib/data'
+import { getCategoryBySlug, getProductsByCategory, getCategories } from '@/lib/data'
 import ProductCard from '@/components/ProductCard'
 
-export function generateStaticParams() {
-  return categories.map((c) => ({ slug: c.slug }))
-}
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const category = getCategoryBySlug(params.slug)
@@ -21,11 +19,11 @@ export default function KategoriPage({ params }: { params: { slug: string } }) {
   const category = getCategoryBySlug(params.slug)
   if (!category) notFound()
 
+  const categories = getCategories()
   const categoryProducts = getProductsByCategory(params.slug)
 
   return (
     <div className="pt-28 pb-24">
-      {/* Hero */}
       <div className={`relative ${category.gradient} py-28 mb-12`}>
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -66,7 +64,6 @@ export default function KategoriPage({ params }: { params: { slug: string } }) {
           </div>
         )}
 
-        {/* Other Categories */}
         <div className="mt-20">
           <div className="text-center mb-10">
             <p className="text-xs text-accent tracking-[0.4em] uppercase mb-3">Diğer Koleksiyonlar</p>
@@ -77,11 +74,7 @@ export default function KategoriPage({ params }: { params: { slug: string } }) {
             {categories
               .filter((c) => c.slug !== params.slug)
               .map((cat) => (
-                <Link
-                  key={cat.slug}
-                  href={`/kategoriler/${cat.slug}`}
-                  className="group relative overflow-hidden h-32"
-                >
+                <Link key={cat.slug} href={`/kategoriler/${cat.slug}`} className="group relative overflow-hidden h-32">
                   <div className={`${cat.gradient} w-full h-full transition-transform duration-500 group-hover:scale-105`} />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <span className="font-serif text-white text-sm font-medium">{cat.name}</span>

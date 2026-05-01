@@ -1,12 +1,16 @@
 import Link from 'next/link'
 import { ArrowRight, Star, Shield, Truck, RotateCcw } from 'lucide-react'
 import ProductCard from '@/components/ProductCard'
-import { products, categories } from '@/lib/data'
+import { getProducts, getCategories } from '@/lib/data'
 
-const featuredProducts = products.filter((p) => p.isBestseller || p.isNew).slice(0, 4)
-const newArrivals = products.filter((p) => p.isNew).slice(0, 4)
+export const dynamic = 'force-dynamic'
 
 export default function HomePage() {
+  const products = getProducts()
+  const categories = getCategories()
+  const featuredProducts = products.filter((p) => p.isBestseller || p.isNew).slice(0, 4)
+  const newArrivals = products.filter((p) => p.isNew).slice(0, 4)
+
   return (
     <>
       {/* Hero */}
@@ -14,7 +18,6 @@ export default function HomePage() {
         <div className="absolute inset-0 category-gradient-1" />
         <div className="absolute inset-0 hero-overlay" />
 
-        {/* Decorative elements */}
         <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full opacity-10"
           style={{ background: 'radial-gradient(circle, #D4AF37 0%, transparent 70%)' }}
         />
@@ -45,7 +48,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-fade-in">
           <span className="text-[10px] text-gray-400 tracking-[0.3em] uppercase">Kaydır</span>
           <div className="w-px h-10 bg-gradient-to-b from-gray-400 to-transparent" />
@@ -185,21 +187,9 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              {
-                name: 'Ayşe K.',
-                text: 'Rouge Dantel Set inanılmaz kaliteli. Kumaş çok yumuşak, ürün fotoğraftaki gibi geldi. Kesinlikle tavsiye ederim.',
-                stars: 5,
-              },
-              {
-                name: 'Melisa T.',
-                text: 'Velours Gecelik\'i hediye aldım, çok beğendim. Paketleme de son derece özenli ve şık. Tekrar alacağım.',
-                stars: 5,
-              },
-              {
-                name: 'Selin A.',
-                text: 'Aura\'nın kalitesi gerçekten premium. Fiyatlar biraz yüksek ama değiyor. Kargo da çok hızlıydı.',
-                stars: 5,
-              },
+              { name: 'Ayşe K.', text: 'Rouge Dantel Set inanılmaz kaliteli. Kumaş çok yumuşak, ürün fotoğraftaki gibi geldi. Kesinlikle tavsiye ederim.', stars: 5 },
+              { name: 'Melisa T.', text: 'Velours Gecelik\'i hediye aldım, çok beğendim. Paketleme de son derece özenli ve şık. Tekrar alacağım.', stars: 5 },
+              { name: 'Selin A.', text: 'Aura\'nın kalitesi gerçekten premium. Fiyatlar biraz yüksek ama değiyor. Kargo da çok hızlıydı.', stars: 5 },
             ].map((review) => (
               <div key={review.name} className="card p-6 md:p-8">
                 <div className="flex gap-1 mb-4">

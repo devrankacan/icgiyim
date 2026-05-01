@@ -1,6 +1,8 @@
 import ProductCard from '@/components/ProductCard'
-import { products, categories } from '@/lib/data'
+import { getProducts, getCategories } from '@/lib/data'
 import Link from 'next/link'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Tüm Ürünler | Aura Homewears',
@@ -8,9 +10,11 @@ export const metadata = {
 }
 
 export default function UrunlerPage() {
+  const products = getProducts()
+  const categories = getCategories()
+
   return (
     <div className="pt-32 pb-24">
-      {/* Header */}
       <div className="bg-[var(--bg-subtle)] border-b border-[var(--border)] py-16 mb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-xs text-accent tracking-[0.4em] uppercase mb-3">Koleksiyon</p>
@@ -22,16 +26,12 @@ export default function UrunlerPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-10">
-          {/* Sidebar */}
           <aside className="w-full lg:w-56 shrink-0">
             <div className="sticky top-28">
               <h3 className="text-xs font-medium tracking-[0.3em] uppercase text-primary-color mb-4">Kategoriler</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link
-                    href="/urunler"
-                    className="text-sm text-accent font-medium flex items-center justify-between"
-                  >
+                  <Link href="/urunler" className="text-sm text-accent font-medium flex items-center justify-between">
                     Tümü
                     <span className="text-xs text-muted">{products.length}</span>
                   </Link>
@@ -65,38 +65,16 @@ export default function UrunlerPage() {
                 <h3 className="text-xs font-medium tracking-[0.3em] uppercase text-primary-color mb-4">Beden</h3>
                 <div className="flex flex-wrap gap-2">
                   {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-                    <button
-                      key={size}
-                      className="px-3 py-1.5 text-xs border border-[var(--border)] text-secondary hover:border-accent hover:text-accent transition-all duration-200"
-                    >
+                    <button key={size} className="px-3 py-1.5 text-xs border border-[var(--border)] text-secondary hover:border-accent hover:text-accent transition-all duration-200">
                       {size}
                     </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-10">
-                <h3 className="text-xs font-medium tracking-[0.3em] uppercase text-primary-color mb-4">Fiyat Aralığı</h3>
-                <div className="space-y-2">
-                  {[
-                    '0₺ – 300₺',
-                    '300₺ – 600₺',
-                    '600₺ – 900₺',
-                    '900₺+',
-                  ].map((range) => (
-                    <label key={range} className="flex items-center gap-2 cursor-pointer group">
-                      <span className="w-4 h-4 border border-[var(--border)] group-hover:border-accent transition-colors duration-200 flex items-center justify-center shrink-0" />
-                      <span className="text-sm text-secondary group-hover:text-accent transition-colors duration-200">{range}</span>
-                    </label>
                   ))}
                 </div>
               </div>
             </div>
           </aside>
 
-          {/* Products Grid */}
           <div className="flex-1">
-            {/* Sort Bar */}
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-[var(--border)]">
               <p className="text-sm text-muted">{products.length} ürün</p>
               <div className="flex items-center gap-2">
