@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ChevronRight, Heart, Share2, Shield, Truck, RotateCcw } from 'lucide-react'
 import { getProductById, getProducts } from '@/lib/data'
 import ProductCard from '@/components/ProductCard'
@@ -41,10 +42,22 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           <div className="space-y-4">
-            <div className={`aspect-[3/4] ${product.gradient} w-full`} />
+            <div className={`relative aspect-[3/4] w-full overflow-hidden`}>
+              {product.image ? (
+                <Image src={product.image} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+              ) : (
+                <div className={`w-full h-full ${product.gradient}`} />
+              )}
+            </div>
             <div className="grid grid-cols-4 gap-3">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className={`aspect-square ${product.gradient} opacity-${i === 1 ? '100' : '60'} cursor-pointer hover:opacity-100 transition-opacity duration-200`} />
+                <div key={i} className={`relative aspect-square overflow-hidden ${i !== 1 ? 'opacity-60 hover:opacity-100 transition-opacity duration-200' : ''} cursor-pointer`}>
+                  {product.image ? (
+                    <Image src={product.image} alt={product.name} fill className="object-cover" sizes="10vw" />
+                  ) : (
+                    <div className={`w-full h-full ${product.gradient}`} />
+                  )}
+                </div>
               ))}
             </div>
           </div>

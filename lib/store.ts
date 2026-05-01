@@ -13,6 +13,7 @@ export interface Product {
   sizes: string[]
   colors: string[]
   gradient: string
+  image?: string
   badge?: string
   isNew?: boolean
   isBestseller?: boolean

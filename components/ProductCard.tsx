@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Heart, Eye } from 'lucide-react'
 import { Product } from '@/lib/data'
 
@@ -11,7 +12,17 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className="group card overflow-hidden">
       {/* Image */}
       <div className="relative aspect-[3/4] overflow-hidden">
-        <div className={`w-full h-full ${product.gradient} transition-transform duration-700 group-hover:scale-105`} />
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-width: 768px) 50vw, 25vw"
+          />
+        ) : (
+          <div className={`w-full h-full ${product.gradient} transition-transform duration-700 group-hover:scale-105`} />
+        )}
 
         {/* Badge */}
         {(product.badge || product.isNew || product.isBestseller) && (
@@ -59,7 +70,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             <span className="text-sm text-muted line-through">{product.originalPrice.toLocaleString('tr-TR')}₺</span>
           )}
         </div>
-        {/* Color dots */}
         <div className="flex items-center gap-1.5 mt-3">
           {product.colors.slice(0, 4).map((color) => (
             <span

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
+import ImageUpload from '../../ImageUpload'
 
 const GRADIENTS = [
   'product-gradient-1', 'product-gradient-2', 'product-gradient-3', 'product-gradient-4',
@@ -28,7 +29,7 @@ export default function DuzenleUrunPage({ params }: { params: { id: string } }) 
   const [form, setForm] = useState({
     name: '', price: '', originalPrice: '', category: '', categorySlug: '',
     description: '', details: '', sizes: '', colors: '',
-    gradient: 'product-gradient-1', badge: '', isNew: false, isBestseller: false,
+    gradient: 'product-gradient-1', image: '', badge: '', isNew: false, isBestseller: false,
   })
 
   useEffect(() => {
@@ -46,6 +47,7 @@ export default function DuzenleUrunPage({ params }: { params: { id: string } }) 
           sizes: Array.isArray(p.sizes) ? p.sizes.join(', ') : p.sizes,
           colors: Array.isArray(p.colors) ? p.colors.join(', ') : p.colors,
           gradient: p.gradient,
+          image: p.image || '',
           badge: p.badge || '',
           isNew: p.isNew || false,
           isBestseller: p.isBestseller || false,
@@ -155,7 +157,11 @@ export default function DuzenleUrunPage({ params }: { params: { id: string } }) 
         <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 space-y-5">
           <h2 className="text-white font-semibold">Görünüm & Etiketler</h2>
 
-          <Field label="Gradient Renk">
+          <Field label="Ürün Görseli">
+            <ImageUpload value={form.image} onChange={(url) => setForm((f) => ({ ...f, image: url }))} />
+          </Field>
+
+          <Field label="Gradient Renk (görsel yoksa kullanılır)">
             <div className="flex gap-2 flex-wrap">
               {GRADIENTS.map((g) => (
                 <button key={g} type="button"

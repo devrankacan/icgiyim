@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
+import ImageUpload from '../ImageUpload'
 
 const GRADIENTS = [
   'product-gradient-1', 'product-gradient-2', 'product-gradient-3', 'product-gradient-4',
@@ -35,6 +36,7 @@ export default function YeniUrunPage() {
     sizes: '',
     colors: '',
     gradient: 'product-gradient-1',
+    image: '',
     badge: '',
     isNew: false,
     isBestseller: false,
@@ -170,7 +172,11 @@ export default function YeniUrunPage() {
         <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 space-y-5">
           <h2 className="text-white font-semibold">Görünüm & Etiketler</h2>
 
-          <Field label="Gradient Renk">
+          <Field label="Ürün Görseli">
+            <ImageUpload value={form.image} onChange={(url) => setForm((f) => ({ ...f, image: url }))} />
+          </Field>
+
+          <Field label="Gradient Renk (görsel yoksa kullanılır)">
             <div className="flex gap-2 flex-wrap">
               {GRADIENTS.map((g) => (
                 <button
