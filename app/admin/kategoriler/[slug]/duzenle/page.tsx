@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
+import ImageUpload from '../../../urunler/ImageUpload'
 
 const GRADIENTS = [
   'category-gradient-1', 'category-gradient-2', 'category-gradient-3',
@@ -17,14 +18,14 @@ export default function DuzenleKategoriPage({ params }: { params: { slug: string
   const [error, setError] = useState('')
 
   const [form, setForm] = useState({
-    name: '', slug: '', description: '', gradient: 'category-gradient-1', count: '0',
+    name: '', slug: '', description: '', gradient: 'category-gradient-1', image: '', count: '0',
   })
 
   useEffect(() => {
     fetch(`/api/categories/${params.slug}`)
       .then((r) => r.json())
       .then((c) => {
-        setForm({ name: c.name, slug: c.slug, description: c.description, gradient: c.gradient, count: String(c.count) })
+        setForm({ name: c.name, slug: c.slug, description: c.description, gradient: c.gradient, image: c.image || '', count: String(c.count) })
         setFetching(false)
       })
   }, [params.slug])
@@ -81,13 +82,11 @@ export default function DuzenleKategoriPage({ params }: { params: { slug: string
               className={inputCls} />
           </Field>
 
-          <Field label="Ürün Sayısı">
-            <input type="number" min="0" value={form.count}
-              onChange={(e) => setForm((f) => ({ ...f, count: e.target.value }))}
-              className={inputCls} />
+          <Field label="Görsel">
+            <ImageUpload value={form.image} onChange={(url) => setForm((f) => ({ ...f, image: url }))} />
           </Field>
 
-          <Field label="Gradient Renk">
+          <Field label="Gradient Renk (görsel yoksa kullanılır)">
             <div className="flex gap-2 flex-wrap">
               {GRADIENTS.map((g) => (
                 <button key={g} type="button"
@@ -98,6 +97,12 @@ export default function DuzenleKategoriPage({ params }: { params: { slug: string
                 />
               ))}
             </div>
+          </Field>
+
+          <Field label="Ürün Sayısı">
+            <input type="number" min="0" value={form.count}
+              onChange={(e) => setForm((f) => ({ ...f, count: e.target.value }))}
+              className={inputCls} />
           </Field>
         </div>
 

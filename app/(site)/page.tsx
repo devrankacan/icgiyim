@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Star, Shield, Truck, RotateCcw } from 'lucide-react'
 import ProductCard from '@/components/ProductCard'
 import { getProducts, getCategories } from '@/lib/data'
@@ -94,11 +95,13 @@ export default function HomePage() {
                 href={`/kategoriler/${cat.slug}`}
                 className={`group relative overflow-hidden ${i === 0 ? 'md:row-span-2' : ''}`}
               >
-                <div
-                  className={`${cat.gradient} transition-transform duration-700 group-hover:scale-105 ${
-                    i === 0 ? 'h-64 md:h-full min-h-[300px]' : 'h-48 md:h-56'
-                  }`}
-                />
+                {cat.image ? (
+                  <div className={`relative overflow-hidden transition-transform duration-700 group-hover:scale-105 ${i === 0 ? 'h-64 md:h-full min-h-[300px]' : 'h-48 md:h-56'}`}>
+                    <Image src={cat.image} alt={cat.name} fill unoptimized className="object-cover" />
+                  </div>
+                ) : (
+                  <div className={`${cat.gradient} transition-transform duration-700 group-hover:scale-105 ${i === 0 ? 'h-64 md:h-full min-h-[300px]' : 'h-48 md:h-56'}`} />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
                   <h3 className="font-serif text-white text-xl font-medium mb-1">{cat.name}</h3>

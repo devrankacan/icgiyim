@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
+import ImageUpload from '../../urunler/ImageUpload'
 
 const GRADIENTS = [
   'category-gradient-1', 'category-gradient-2', 'category-gradient-3',
@@ -16,7 +17,7 @@ export default function YeniKategoriPage() {
   const [error, setError] = useState('')
 
   const [form, setForm] = useState({
-    name: '', slug: '', description: '', gradient: 'category-gradient-1', count: '0',
+    name: '', slug: '', description: '', gradient: 'category-gradient-1', image: '', count: '0',
   })
 
   async function handleSubmit(e: React.FormEvent) {
@@ -68,13 +69,11 @@ export default function YeniKategoriPage() {
               className={inputCls} placeholder="Kısa kategori açıklaması" />
           </Field>
 
-          <Field label="Ürün Sayısı (gösterim için)">
-            <input type="number" min="0" value={form.count}
-              onChange={(e) => setForm((f) => ({ ...f, count: e.target.value }))}
-              className={inputCls} />
+          <Field label="Görsel">
+            <ImageUpload value={form.image} onChange={(url) => setForm((f) => ({ ...f, image: url }))} />
           </Field>
 
-          <Field label="Gradient Renk">
+          <Field label="Gradient Renk (görsel yoksa kullanılır)">
             <div className="flex gap-2 flex-wrap">
               {GRADIENTS.map((g) => (
                 <button key={g} type="button"
@@ -85,6 +84,12 @@ export default function YeniKategoriPage() {
                 />
               ))}
             </div>
+          </Field>
+
+          <Field label="Ürün Sayısı (gösterim için)">
+            <input type="number" min="0" value={form.count}
+              onChange={(e) => setForm((f) => ({ ...f, count: e.target.value }))}
+              className={inputCls} />
           </Field>
         </div>
 

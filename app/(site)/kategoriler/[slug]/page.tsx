@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ChevronRight } from 'lucide-react'
 import { getCategoryBySlug, getProductsByCategory, getCategories } from '@/lib/data'
 import ProductCard from '@/components/ProductCard'
@@ -24,7 +25,8 @@ export default function KategoriPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="pt-28 pb-24">
-      <div className={`relative ${category.gradient} py-28 mb-12`}>
+      <div className={`relative ${category.image ? '' : category.gradient} py-28 mb-12`}>
+        {category.image && <Image src={category.image} alt={category.name} fill unoptimized className="object-cover" />}
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <nav className="flex items-center justify-center gap-2 text-xs text-gray-400 mb-6">
@@ -75,7 +77,10 @@ export default function KategoriPage({ params }: { params: { slug: string } }) {
               .filter((c) => c.slug !== params.slug)
               .map((cat) => (
                 <Link key={cat.slug} href={`/kategoriler/${cat.slug}`} className="group relative overflow-hidden h-32">
-                  <div className={`${cat.gradient} w-full h-full transition-transform duration-500 group-hover:scale-105`} />
+                  {cat.image
+                    ? <Image src={cat.image} alt={cat.name} fill unoptimized className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    : <div className={`${cat.gradient} w-full h-full transition-transform duration-500 group-hover:scale-105`} />
+                  }
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <span className="font-serif text-white text-sm font-medium">{cat.name}</span>
                   </div>

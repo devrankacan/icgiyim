@@ -25,6 +25,7 @@ export interface Category {
   slug: string
   description: string
   gradient: string
+  image?: string
   count: number
 }
 
