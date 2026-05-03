@@ -68,30 +68,34 @@ export default function HeroSlider({ slides }: Props) {
 
       {/* Text */}
       <div
-        className="absolute bottom-12 left-4 sm:left-12 lg:left-24 xl:left-32 z-10 max-w-xs sm:max-w-sm lg:max-w-md"
+        className="absolute bottom-12 inset-x-0 z-10"
         style={{ opacity: animating ? 0 : 1, transform: animating ? 'translateY(12px)' : 'translateY(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' }}
       >
-        {slide.badgeText && (
-          <p className="text-xs text-accent tracking-[0.4em] uppercase font-sans mb-6">{slide.badgeText}</p>
-        )}
-        <h1 className="font-serif text-5xl md:text-7xl font-medium text-white leading-[1.1] mb-6 whitespace-pre-line">
-          {slide.title}
-        </h1>
-        {slide.subtitle && (
-          <p className="text-base md:text-lg text-gray-300 leading-relaxed mb-10 font-sans">{slide.subtitle}</p>
-        )}
-        {(slide.btn1Text || slide.btn2Text) && (
-          <div className="flex flex-col sm:flex-row gap-4">
-            {slide.btn1Text && slide.btn1Href && (
-              <Link href={slide.btn1Href} className="btn-primary">{slide.btn1Text}</Link>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-lg">
+            {slide.badgeText && (
+              <p className="text-xs text-accent tracking-[0.4em] uppercase font-sans mb-6">{slide.badgeText}</p>
             )}
-            {slide.btn2Text && slide.btn2Href && (
-              <Link href={slide.btn2Href} className="btn-outline" style={{ borderColor: 'rgba(255,255,255,0.4)', color: 'white' }}>
-                {slide.btn2Text}
-              </Link>
+            <h1 className="font-serif text-5xl md:text-7xl font-medium text-white leading-[1.1] mb-6 whitespace-pre-line">
+              {slide.title}
+            </h1>
+            {slide.subtitle && (
+              <p className="text-base md:text-lg text-gray-300 leading-relaxed mb-10 font-sans">{slide.subtitle}</p>
+            )}
+            {(slide.btn1Text || slide.btn2Text) && (
+              <div className="flex flex-col sm:flex-row gap-4">
+                {slide.btn1Text && slide.btn1Href && (
+                  <Link href={slide.btn1Href} className="btn-primary">{slide.btn1Text}</Link>
+                )}
+                {slide.btn2Text && slide.btn2Href && (
+                  <Link href={slide.btn2Href} className="btn-outline" style={{ borderColor: 'rgba(255,255,255,0.4)', color: 'white' }}>
+                    {slide.btn2Text}
+                  </Link>
+                )}
+              </div>
             )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Arrows */}
