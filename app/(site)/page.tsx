@@ -17,7 +17,7 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen flex items-end overflow-hidden">
+      <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-end overflow-hidden">
         <div className="absolute inset-0 category-gradient-1" />
         {banners.anasayfa_hero && (
           // eslint-disable-next-line @next/next/no-img-element
@@ -32,7 +32,7 @@ export default async function HomePage() {
           style={{ background: 'radial-gradient(circle, #C9967A 0%, transparent 70%)' }}
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-40 md:pt-48">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-28 md:pt-32">
           <div className="max-w-2xl">
             <p className="text-xs text-accent tracking-[0.4em] uppercase font-sans mb-6 animate-fade-in">
               Yeni Koleksiyon — İlkbahar 2024
