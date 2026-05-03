@@ -1,17 +1,20 @@
-import { Metadata } from 'next'
 import Link from 'next/link'
 import { Heart, Star, Shield, Sparkles } from 'lucide-react'
+import { getBanners } from '@/lib/data'
 
-export const metadata: Metadata = {
-  title: 'Hakkımızda | Aura Homewears',
-  description: 'Aura Homewears\'in hikayesini, değerlerimizi ve misyonumuzu keşfedin.',
-}
+export const dynamic = 'force-dynamic'
 
 export default function HakkimizdaPage() {
+  const banners = getBanners()
+
   return (
     <div className="pt-28 pb-24">
       {/* Hero */}
       <div className="relative category-gradient-1 py-32">
+        {banners.hakkimizda_hero && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={banners.hakkimizda_hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-xs text-accent tracking-[0.4em] uppercase mb-4">Biz Kimiz</p>
@@ -46,7 +49,12 @@ export default function HakkimizdaPage() {
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-[4/5] category-gradient-4" />
+              {banners.hakkimizda_hikaye ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={banners.hakkimizda_hikaye} alt="" className="aspect-[4/5] w-full object-cover" />
+              ) : (
+                <div className="aspect-[4/5] category-gradient-4" />
+              )}
               <div className="absolute -bottom-6 -left-6 w-2/3 aspect-square category-gradient-2 opacity-60" />
             </div>
           </div>
@@ -118,6 +126,10 @@ export default function HakkimizdaPage() {
 
       {/* CTA */}
       <section className="relative category-gradient-1 py-24">
+        {banners.hakkimizda_cta && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={banners.hakkimizda_cta} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-serif text-4xl md:text-5xl font-medium text-white mb-6">

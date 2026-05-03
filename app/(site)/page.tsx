@@ -1,13 +1,14 @@
 import Link from 'next/link'
 import { ArrowRight, Star, Shield, Truck, RotateCcw } from 'lucide-react'
 import ProductCard from '@/components/ProductCard'
-import { getProducts, getCategories } from '@/lib/data'
+import { getProducts, getCategories, getBanners } from '@/lib/data'
 
 export const dynamic = 'force-dynamic'
 
 export default function HomePage() {
   const products = getProducts()
   const categories = getCategories()
+  const banners = getBanners()
   const featuredProducts = products.filter((p) => p.isBestseller || p.isNew).slice(0, 4)
   const newArrivals = products.filter((p) => p.isNew).slice(0, 4)
 
@@ -16,6 +17,10 @@ export default function HomePage() {
       {/* Hero */}
       <section className="relative min-h-screen flex items-end overflow-hidden">
         <div className="absolute inset-0 category-gradient-1" />
+        {banners.anasayfa_hero && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={banners.anasayfa_hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <div className="absolute inset-0 hero-overlay" />
 
         <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full opacity-10"
@@ -145,6 +150,10 @@ export default function HomePage() {
       {/* Banner */}
       <section className="relative py-28 overflow-hidden">
         <div className="absolute inset-0 category-gradient-4" />
+        {banners.anasayfa_banner && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={banners.anasayfa_banner} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-xs text-accent tracking-[0.4em] uppercase mb-4">Sınırlı Stok</p>

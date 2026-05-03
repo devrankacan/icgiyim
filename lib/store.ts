@@ -29,14 +29,32 @@ export interface Category {
   count: number
 }
 
+export interface BannerSettings {
+  anasayfa_hero: string
+  anasayfa_banner: string
+  hakkimizda_hero: string
+  hakkimizda_hikaye: string
+  hakkimizda_cta: string
+}
+
 interface Store {
   products: Product[]
   categories: Category[]
+  banners: BannerSettings
+}
+
+const DEFAULT_BANNERS: BannerSettings = {
+  anasayfa_hero: '',
+  anasayfa_banner: '',
+  hakkimizda_hero: '',
+  hakkimizda_hikaye: '',
+  hakkimizda_cta: '',
 }
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'store.json')
 
 const DEFAULT_DATA: Store = {
+  banners: DEFAULT_BANNERS,
   categories: [
     { name: 'Setler', slug: 'setler', description: 'Uyumlu sutyen ve külot kombinasyonları', gradient: 'category-gradient-1', count: 24 },
     { name: 'Gecelikler', slug: 'gecelikler', description: 'İpeksi dokunuşlu gece kıyafetleri', gradient: 'category-gradient-2', count: 18 },
@@ -120,7 +138,9 @@ function readStore(): Store {
       fs.writeFileSync(DATA_FILE, JSON.stringify(DEFAULT_DATA, null, 2))
       return DEFAULT_DATA
     }
-    return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'))
+    const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'))
+    if (!data.banners) data.banners = DEFAULT_BANNERS
+    return data
   } catch {
     return DEFAULT_DATA
   }
@@ -199,4 +219,15 @@ export function deleteCategory(slug: string): boolean {
   store.categories.splice(i, 1)
   writeStore(store)
   return true
+}
+
+export function getBanners(): BannerSettings {
+  return readStore().banners
+}
+
+export function updateBanners(updates: Partial<BannerSettings>): BannerSettings {
+  const store = readStore()
+  store.banners = { ...store.banners, ...updates }
+  writeStore(store)
+  return store.banners
 }
