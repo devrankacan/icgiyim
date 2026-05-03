@@ -1,4 +1,4 @@
-export type { Product, Category, BannerSettings } from './store'
+export type { Product, Category, BannerSettings, Variant } from './store'
 export {
   getProducts,
   getCategories,

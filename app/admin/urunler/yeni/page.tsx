@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import ImageUpload from '../ImageUpload'
 import GalleryUpload from '../GalleryUpload'
+import VariantManager from '../VariantManager'
+import { Variant } from '@/lib/data'
 
 const GRADIENTS = [
   'product-gradient-1', 'product-gradient-2', 'product-gradient-3', 'product-gradient-4',
@@ -43,6 +45,7 @@ export default function YeniUrunPage() {
     isNew: false,
     isBestseller: false,
   })
+  const [variants, setVariants] = useState<Variant[]>([])
 
   function handleCategoryChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const cat = CATEGORY_OPTIONS.find((c) => c.slug === e.target.value)
@@ -58,7 +61,7 @@ export default function YeniUrunPage() {
     const res = await fetch('/api/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, id }),
+      body: JSON.stringify({ ...form, id, variants }),
     })
 
     if (res.ok) {
@@ -226,6 +229,12 @@ export default function YeniUrunPage() {
               <span className="text-sm text-gray-300">Çok Satan</span>
             </label>
           </div>
+        </div>
+
+        <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 space-y-5">
+          <h2 className="text-white font-semibold">Varyantlar</h2>
+          <p className="text-xs text-gray-500">Her varyant için ayrı fiyat, özellik ve görsel tanımlayabilirsiniz.</p>
+          <VariantManager value={variants} onChange={setVariants} />
         </div>
 
         {error && <p className="text-red-400 text-sm">{error}</p>}

@@ -2,6 +2,14 @@ import fs from 'fs'
 import path from 'path'
 import { unstable_noStore as noStore } from 'next/cache'
 
+export interface Variant {
+  id: string
+  name: string
+  price?: number
+  features?: string[]
+  image?: string
+}
+
 export interface Product {
   id: string
   name: string
@@ -19,6 +27,7 @@ export interface Product {
   badge?: string
   isNew?: boolean
   isBestseller?: boolean
+  variants?: Variant[]
 }
 
 export interface Category {
