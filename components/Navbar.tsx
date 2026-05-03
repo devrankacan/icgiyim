@@ -41,7 +41,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link href="/" className="flex flex-col leading-none">
-            <span className="font-serif text-xl md:text-2xl font-medium tracking-[0.15em] text-primary-color">
+            <span className={`font-serif text-xl md:text-2xl font-medium tracking-[0.15em] transition-colors duration-300 ${scrolled ? 'text-primary-color' : 'text-white'}`}>
               AURA
             </span>
             <span className="text-[10px] tracking-[0.35em] text-accent uppercase font-sans">
@@ -52,7 +52,11 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="nav-link">
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium tracking-widest uppercase transition-colors duration-200 hover:text-accent ${scrolled ? 'text-secondary' : 'text-white/80 hover:text-white'}`}
+              >
                 {link.label}
               </Link>
             ))}
@@ -60,14 +64,14 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-[var(--bg-subtle)]" aria-label="Ara">
-              <Search size={18} className="text-secondary" />
+            <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-white/10" aria-label="Ara">
+              <Search size={18} className={scrolled ? 'text-secondary' : 'text-white/80'} />
             </button>
-            <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-[var(--bg-subtle)]" aria-label="Favoriler">
-              <Heart size={18} className="text-secondary" />
+            <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-white/10" aria-label="Favoriler">
+              <Heart size={18} className={scrolled ? 'text-secondary' : 'text-white/80'} />
             </button>
-            <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-[var(--bg-subtle)]" aria-label="Sepet">
-              <ShoppingBag size={18} className="text-secondary" />
+            <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-white/10" aria-label="Sepet">
+              <ShoppingBag size={18} className={scrolled ? 'text-secondary' : 'text-white/80'} />
             </button>
             <ThemeToggle />
             <button
@@ -75,7 +79,7 @@ export default function Navbar() {
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Menü"
             >
-              {menuOpen ? <X size={20} className="text-primary-color" /> : <Menu size={20} className="text-primary-color" />}
+              {menuOpen ? <X size={20} className={scrolled ? 'text-primary-color' : 'text-white'} /> : <Menu size={20} className={scrolled ? 'text-primary-color' : 'text-white'} />}
             </button>
           </div>
         </div>
