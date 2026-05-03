@@ -2,13 +2,21 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { ChevronRight, ChevronLeft, Heart, Share2, Shield, Truck, RotateCcw, X, ZoomIn } from 'lucide-react'
+import { ChevronRight, ChevronLeft, Heart, Share2, Shield, Truck, RotateCcw, X, ZoomIn, Check } from 'lucide-react'
 import { Product, Variant } from '@/lib/data'
+import { useCart } from '@/lib/cartStore'
+import { useFavorites } from '@/lib/favoritesStore'
 
 export default function ProductDetail({ product, related }: { product: Product; related: Product[] }) {
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [lightbox, setLightbox] = useState<number | null>(null)
+  const [selectedSize, setSelectedSize] = useState(product.sizes[0] ?? '')
+  const [selectedColor, setSelectedColor] = useState(product.colors[0] ?? '')
+  const [added, setAdded] = useState(false)
+  const { add } = useCart()
+  const { toggle, has } = useFavorites()
+  const isFav = has(product.id)
 
   const variantImage = selectedVariant?.image
   const baseImages = [
@@ -27,6 +35,22 @@ export default function ProductDetail({ product, related }: { product: Product; 
     const same = selectedVariant?.id === v.id
     setSelectedVariant(same ? null : v)
     setActiveIndex(0)
+  }
+
+  function handleAddToCart() {
+    add({
+      productId: product.id,
+      name: product.name,
+      image: displayImage ?? undefined,
+      gradient: product.gradient,
+      category: product.category,
+      price: displayPrice,
+      size: selectedSize,
+      color: selectedColor,
+      variantName: selectedVariant?.name,
+    })
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
   }
 
   const lightboxPrev = useCallback(() => setLightbox((i) => (i !== null ? (i - 1 + allImages.length) % allImages.length : null)), [allImages.length])
@@ -203,11 +227,15 @@ export default function ProductDetail({ product, related }: { product: Product; 
             {/* Colors */}
             <div className="mb-6">
               <p className="text-xs font-medium tracking-[0.2em] uppercase text-primary-color mb-3">
-                Renk: <span className="text-accent">{product.colors[0]}</span>
+                Renk: <span className="text-accent">{selectedColor}</span>
               </p>
               <div className="flex flex-wrap gap-2">
                 {product.colors.map((color) => (
-                  <button key={color} className="px-4 py-2 text-xs border border-[var(--border)] text-secondary hover:border-accent hover:text-accent transition-all duration-200">
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    className={`px-4 py-2 text-xs border transition-all duration-200 ${selectedColor === color ? 'border-accent text-accent bg-accent/10' : 'border-[var(--border)] text-secondary hover:border-accent hover:text-accent'}`}
+                  >
                     {color}
                   </button>
                 ))}
@@ -217,12 +245,18 @@ export default function ProductDetail({ product, related }: { product: Product; 
             {/* Sizes */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-medium tracking-[0.2em] uppercase text-primary-color">Beden</p>
+                <p className="text-xs font-medium tracking-[0.2em] uppercase text-primary-color">
+                  Beden: <span className="text-accent">{selectedSize}</span>
+                </p>
                 <Link href="/beden-rehberi" className="text-xs text-accent underline underline-offset-2">Beden Rehberi</Link>
               </div>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((size) => (
-                  <button key={size} className="px-4 py-2 text-xs border border-[var(--border)] text-secondary hover:border-accent hover:text-accent transition-all duration-200">
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 text-xs border transition-all duration-200 ${selectedSize === size ? 'border-accent text-accent bg-accent/10' : 'border-[var(--border)] text-secondary hover:border-accent hover:text-accent'}`}
+                  >
                     {size}
                   </button>
                 ))}
@@ -230,9 +264,18 @@ export default function ProductDetail({ product, related }: { product: Product; 
             </div>
 
             <div className="flex gap-3 mb-8">
-              <button className="btn-primary flex-1">Sepete Ekle</button>
-              <button className="w-12 h-12 border border-[var(--border)] flex items-center justify-center hover:border-accent transition-colors duration-200" aria-label="Favorilere Ekle">
-                <Heart size={18} className="text-secondary" />
+              <button
+                onClick={handleAddToCart}
+                className={`btn-primary flex-1 flex items-center justify-center gap-2 transition-all ${added ? 'bg-green-600 hover:bg-green-600' : ''}`}
+              >
+                {added ? <><Check size={16} /> Eklendi</> : 'Sepete Ekle'}
+              </button>
+              <button
+                onClick={() => toggle(product.id)}
+                className={`w-12 h-12 border flex items-center justify-center transition-colors duration-200 ${isFav ? 'border-accent bg-accent/10' : 'border-[var(--border)] hover:border-accent'}`}
+                aria-label="Favorilere Ekle"
+              >
+                <Heart size={18} className={isFav ? 'text-accent fill-accent' : 'text-secondary'} />
               </button>
               <button className="w-12 h-12 border border-[var(--border)] flex items-center justify-center hover:border-accent transition-colors duration-200" aria-label="Paylaş">
                 <Share2 size={18} className="text-secondary" />

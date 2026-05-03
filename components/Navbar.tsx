@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react'
 import { Menu, X, ShoppingBag, Search, Heart } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import { Category } from '@/lib/data'
+import { useCart } from '@/lib/cartStore'
+import { useFavorites } from '@/lib/favoritesStore'
 
 interface NavbarProps {
   categories?: Category[]
@@ -13,6 +15,8 @@ interface NavbarProps {
 export default function Navbar({ categories = [] }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { count: cartCount } = useCart()
+  const { count: favCount } = useFavorites()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -72,12 +76,22 @@ export default function Navbar({ categories = [] }: NavbarProps) {
             <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-white/10" aria-label="Ara">
               <Search size={18} className={scrolled ? 'text-secondary' : 'text-white/80'} />
             </button>
-            <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-white/10" aria-label="Favoriler">
+            <Link href="/favoriler" className="relative w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-white/10" aria-label="Favoriler">
               <Heart size={18} className={scrolled ? 'text-secondary' : 'text-white/80'} />
-            </button>
-            <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-white/10" aria-label="Sepet">
+              {favCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                  {favCount > 9 ? '9+' : favCount}
+                </span>
+              )}
+            </Link>
+            <Link href="/sepet" className="relative w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-white/10" aria-label="Sepet">
               <ShoppingBag size={18} className={scrolled ? 'text-secondary' : 'text-white/80'} />
-            </button>
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                  {cartCount > 9 ? '9+' : cartCount}
+                </span>
+              )}
+            </Link>
             <ThemeToggle />
             <button
               className="lg:hidden w-9 h-9 flex items-center justify-center"
