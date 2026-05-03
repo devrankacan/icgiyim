@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowRight, Star, Shield, Truck, RotateCcw } from 'lucide-react'
 import ProductCard from '@/components/ProductCard'
 import { getProducts, getCategories } from '@/lib/data'
@@ -96,9 +95,8 @@ export default function HomePage() {
                 className={`group relative overflow-hidden ${i === 0 ? 'md:row-span-2' : ''}`}
               >
                 {cat.image ? (
-                  <div className={`relative overflow-hidden transition-transform duration-700 group-hover:scale-105 ${i === 0 ? 'h-64 md:h-full min-h-[300px]' : 'h-48 md:h-56'}`}>
-                    <Image src={cat.image} alt={cat.name} fill unoptimized className="object-cover" />
-                  </div>
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={cat.image} alt={cat.name} className={`w-full object-cover transition-transform duration-700 group-hover:scale-105 ${i === 0 ? 'h-64 md:h-full min-h-[300px]' : 'h-48 md:h-56'}`} />
                 ) : (
                   <div className={`${cat.gradient} transition-transform duration-700 group-hover:scale-105 ${i === 0 ? 'h-64 md:h-full min-h-[300px]' : 'h-48 md:h-56'}`} />
                 )}

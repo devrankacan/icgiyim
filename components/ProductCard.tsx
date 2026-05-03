@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { Heart, Eye } from 'lucide-react'
 import { Product } from '@/lib/data'
 
@@ -13,13 +12,11 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Image */}
       <div className="relative aspect-[3/4] overflow-hidden">
         {product.image ? (
-          <Image
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={product.image}
             alt={product.name}
-            fill
-            unoptimized
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-            sizes="(max-width: 768px) 50vw, 25vw"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
           <div className={`w-full h-full ${product.gradient} transition-transform duration-700 group-hover:scale-105`} />

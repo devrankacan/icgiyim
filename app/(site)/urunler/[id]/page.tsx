@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ChevronRight, Heart, Share2, Shield, Truck, RotateCcw } from 'lucide-react'
 import { getProductById, getProducts } from '@/lib/data'
 import ProductCard from '@/components/ProductCard'
@@ -42,9 +41,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           <div className="space-y-4">
-            <div className={`relative aspect-[3/4] w-full overflow-hidden`}>
+            <div className="aspect-[3/4] w-full overflow-hidden">
               {product.image ? (
-                <Image src={product.image} alt={product.name} fill unoptimized className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
               ) : (
                 <div className={`w-full h-full ${product.gradient}`} />
               )}
@@ -52,8 +52,9 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             {product.images && product.images.length > 0 && (
               <div className="grid grid-cols-4 gap-3">
                 {product.images.slice(0, 4).map((img, i) => (
-                  <div key={i} className={`relative aspect-square overflow-hidden cursor-pointer ${i !== 0 ? 'opacity-60 hover:opacity-100 transition-opacity duration-200' : ''}`}>
-                    <Image src={img} alt={`${product.name} ${i + 1}`} fill unoptimized className="object-cover" sizes="10vw" />
+                  <div key={i} className={`aspect-square overflow-hidden cursor-pointer ${i !== 0 ? 'opacity-60 hover:opacity-100 transition-opacity duration-200' : ''}`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img} alt={`${product.name} ${i + 1}`} className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>
