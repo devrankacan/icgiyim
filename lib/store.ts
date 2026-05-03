@@ -37,6 +37,7 @@ export interface Category {
   gradient: string
   image?: string
   count: number
+  showInNav?: boolean
 }
 
 export interface BannerSettings {

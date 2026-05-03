@@ -18,14 +18,14 @@ export default function DuzenleKategoriPage({ params }: { params: { slug: string
   const [error, setError] = useState('')
 
   const [form, setForm] = useState({
-    name: '', slug: '', description: '', gradient: 'category-gradient-1', image: '', count: '0',
+    name: '', slug: '', description: '', gradient: 'category-gradient-1', image: '', count: '0', showInNav: true,
   })
 
   useEffect(() => {
     fetch(`/api/categories/${params.slug}`)
       .then((r) => r.json())
       .then((c) => {
-        setForm({ name: c.name, slug: c.slug, description: c.description, gradient: c.gradient, image: c.image || '', count: String(c.count) })
+        setForm({ name: c.name, slug: c.slug, description: c.description, gradient: c.gradient, image: c.image || '', count: String(c.count), showInNav: c.showInNav !== false })
         setFetching(false)
       })
   }, [params.slug])
@@ -104,6 +104,19 @@ export default function DuzenleKategoriPage({ params }: { params: { slug: string
               onChange={(e) => setForm((f) => ({ ...f, count: e.target.value }))}
               className={inputCls} />
           </Field>
+
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="showInNav"
+              checked={form.showInNav}
+              onChange={(e) => setForm((f) => ({ ...f, showInNav: e.target.checked }))}
+              className="w-4 h-4 accent-rose-500 cursor-pointer"
+            />
+            <label htmlFor="showInNav" className="text-sm text-gray-300 cursor-pointer select-none">
+              Üst menüde göster
+            </label>
+          </div>
         </div>
 
         {error && <p className="text-red-400 text-sm">{error}</p>}
