@@ -23,6 +23,7 @@ export interface Product {
   colors: string[]
   gradient: string
   image?: string
+  imageMobile?: string
   images?: string[]
   badge?: string
   isNew?: boolean
@@ -36,16 +37,22 @@ export interface Category {
   description: string
   gradient: string
   image?: string
+  imageMobile?: string
   count: number
   showInNav?: boolean
 }
 
 export interface BannerSettings {
   anasayfa_hero: string
+  anasayfa_hero_mobile?: string
   anasayfa_banner: string
+  anasayfa_banner_mobile?: string
   hakkimizda_hero: string
+  hakkimizda_hero_mobile?: string
   hakkimizda_hikaye: string
+  hakkimizda_hikaye_mobile?: string
   hakkimizda_cta: string
+  hakkimizda_cta_mobile?: string
 }
 
 interface Store {

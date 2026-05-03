@@ -20,8 +20,11 @@ export default async function HomePage() {
       <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-end overflow-hidden">
         <div className="absolute inset-0 category-gradient-1" />
         {banners.anasayfa_hero && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={banners.anasayfa_hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <picture className="absolute inset-0 w-full h-full">
+            {banners.anasayfa_hero_mobile && <source media="(max-width: 767px)" srcSet={banners.anasayfa_hero_mobile} />}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={banners.anasayfa_hero} alt="" className="w-full h-full object-cover" />
+          </picture>
         )}
         <div className="absolute inset-0 hero-overlay" />
 
@@ -102,8 +105,11 @@ export default async function HomePage() {
                 className={`group relative overflow-hidden ${i === 0 ? 'md:row-span-2' : ''}`}
               >
                 {cat.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={cat.image} alt={cat.name} className={`w-full object-cover transition-transform duration-700 group-hover:scale-105 ${i === 0 ? 'h-64 md:h-full min-h-[300px]' : 'h-48 md:h-56'}`} />
+                  <picture>
+                    {cat.imageMobile && <source media="(max-width: 767px)" srcSet={cat.imageMobile} />}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={cat.image} alt={cat.name} className={`w-full object-cover transition-transform duration-700 group-hover:scale-105 ${i === 0 ? 'h-64 md:h-full min-h-[300px]' : 'h-48 md:h-56'}`} />
+                  </picture>
                 ) : (
                   <div className={`${cat.gradient} transition-transform duration-700 group-hover:scale-105 ${i === 0 ? 'h-64 md:h-full min-h-[300px]' : 'h-48 md:h-56'}`} />
                 )}
@@ -153,8 +159,11 @@ export default async function HomePage() {
       <section className="relative py-28 overflow-hidden">
         <div className="absolute inset-0 category-gradient-4" />
         {banners.anasayfa_banner && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={banners.anasayfa_banner} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <picture className="absolute inset-0 w-full h-full">
+            {banners.anasayfa_banner_mobile && <source media="(max-width: 767px)" srcSet={banners.anasayfa_banner_mobile} />}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={banners.anasayfa_banner} alt="" className="w-full h-full object-cover" />
+          </picture>
         )}
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

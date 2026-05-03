@@ -18,14 +18,14 @@ export default function DuzenleKategoriPage({ params }: { params: { slug: string
   const [error, setError] = useState('')
 
   const [form, setForm] = useState({
-    name: '', slug: '', description: '', gradient: 'category-gradient-1', image: '', count: '0', showInNav: true,
+    name: '', slug: '', description: '', gradient: 'category-gradient-1', image: '', imageMobile: '', count: '0', showInNav: true,
   })
 
   useEffect(() => {
     fetch(`/api/categories/${params.slug}`)
       .then((r) => r.json())
       .then((c) => {
-        setForm({ name: c.name, slug: c.slug, description: c.description, gradient: c.gradient, image: c.image || '', count: String(c.count), showInNav: c.showInNav !== false })
+        setForm({ name: c.name, slug: c.slug, description: c.description, gradient: c.gradient, image: c.image || '', imageMobile: c.imageMobile || '', count: String(c.count), showInNav: c.showInNav !== false })
         setFetching(false)
       })
   }, [params.slug])
@@ -83,7 +83,12 @@ export default function DuzenleKategoriPage({ params }: { params: { slug: string
           </Field>
 
           <Field label="Görsel">
-            <ImageUpload value={form.image} onChange={(url) => setForm((f) => ({ ...f, image: url }))} />
+            <ImageUpload
+              value={form.image}
+              onChange={(url) => setForm((f) => ({ ...f, image: url }))}
+              valueMobile={form.imageMobile}
+              onChangeMobile={(url) => setForm((f) => ({ ...f, imageMobile: url }))}
+            />
           </Field>
 
           <Field label="Gradient Renk (görsel yoksa kullanılır)">

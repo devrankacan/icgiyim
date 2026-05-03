@@ -32,6 +32,7 @@ export default function YeniUrunPage() {
     colors: '',
     gradient: 'product-gradient-1',
     image: '',
+    imageMobile: '',
     images: [] as string[],
     badge: '',
     isNew: false,
@@ -175,7 +176,12 @@ export default function YeniUrunPage() {
           <h2 className="text-white font-semibold">Görünüm & Etiketler</h2>
 
           <Field label="Ana Görsel">
-            <ImageUpload value={form.image} onChange={(url) => setForm((f) => ({ ...f, image: url }))} />
+            <ImageUpload
+              value={form.image}
+              onChange={(url) => setForm((f) => ({ ...f, image: url }))}
+              valueMobile={form.imageMobile}
+              onChangeMobile={(url) => setForm((f) => ({ ...f, imageMobile: url }))}
+            />
           </Field>
 
           <Field label="Galeri Görselleri (çoklu)">

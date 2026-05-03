@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import Image from 'next/image'
-import { Upload, X } from 'lucide-react'
+import { Upload, X, Monitor, Smartphone } from 'lucide-react'
 
 interface Props {
   value: string
   onChange: (url: string) => void
+  valueMobile?: string
+  onChangeMobile?: (url: string) => void
 }
 
 function resizeImage(file: File, maxSize = 1200): Promise<string> {
@@ -32,7 +33,19 @@ function resizeImage(file: File, maxSize = 1200): Promise<string> {
   })
 }
 
-export default function ImageUpload({ value, onChange }: Props) {
+function SingleUpload({
+  value,
+  onChange,
+  label,
+  hint,
+  Icon,
+}: {
+  value: string
+  onChange: (url: string) => void
+  label?: string
+  hint?: string
+  Icon?: React.ElementType
+}) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -40,25 +53,18 @@ export default function ImageUpload({ value, onChange }: Props) {
   async function handleFile(file: File) {
     setUploading(true)
     setError('')
-
     try {
       const base64 = await resizeImage(file)
-
       const res = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ file: base64, filename: file.name, type: 'image/jpeg' }),
       })
-
       const text = await res.text()
       let data: { url?: string; error?: string }
       try { data = JSON.parse(text) } catch { throw new Error('Sunucu yanıtı: ' + text.slice(0, 100)) }
-
-      if (res.ok && data.url) {
-        onChange(data.url)
-      } else {
-        setError(data.error || 'Yükleme başarısız')
-      }
+      if (res.ok && data.url) onChange(data.url)
+      else setError(data.error || 'Yükleme başarısız')
     } catch (err) {
       setError(String(err))
     } finally {
@@ -74,9 +80,18 @@ export default function ImageUpload({ value, onChange }: Props) {
 
   return (
     <div>
+      {label && (
+        <p className="text-xs text-gray-400 flex items-center gap-1.5 mb-2">
+          {Icon && <Icon size={12} />}
+          {label}
+          {hint && <span className="text-gray-600 font-normal">{hint}</span>}
+        </p>
+      )}
+
       {value ? (
-        <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-700">
-          <Image src={value} alt="Ürün görseli" fill className="object-cover" unoptimized />
+        <div className="relative w-full h-40 rounded-lg overflow-hidden border border-gray-700">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={value} alt={label ?? 'Görsel'} className="w-full h-full object-cover" />
           <button
             type="button"
             onClick={() => onChange('')}
@@ -90,26 +105,26 @@ export default function ImageUpload({ value, onChange }: Props) {
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           onClick={() => !uploading && inputRef.current?.click()}
-          className="w-full h-48 border-2 border-dashed border-gray-700 hover:border-rose-500 rounded-lg flex flex-col items-center justify-center gap-3 cursor-pointer transition-colors"
+          className="w-full h-40 border-2 border-dashed border-gray-700 hover:border-rose-500 rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors"
         >
           {uploading ? (
             <div className="flex flex-col items-center gap-2">
-              <div className="w-6 h-6 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm text-gray-400">Yükleniyor...</p>
+              <div className="w-5 h-5 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+              <p className="text-xs text-gray-400">Yükleniyor...</p>
             </div>
           ) : (
             <>
-              <Upload size={24} className="text-gray-500" />
-              <div className="text-center">
-                <p className="text-sm text-gray-400">Tıkla veya sürükle bırak</p>
-                <p className="text-xs text-gray-600 mt-1">JPG, PNG, WebP</p>
+              <Upload size={20} className="text-gray-500" />
+              <div className="text-center px-2">
+                <p className="text-xs text-gray-400">Tıkla veya sürükle bırak</p>
+                <p className="text-[10px] text-gray-600 mt-0.5">JPG, PNG, WebP</p>
               </div>
             </>
           )}
         </div>
       )}
 
-      {error && <p className="text-red-400 text-xs mt-2 break-all">{error}</p>}
+      {error && <p className="text-red-400 text-xs mt-1 break-all">{error}</p>}
 
       <input
         ref={inputRef}
@@ -124,4 +139,28 @@ export default function ImageUpload({ value, onChange }: Props) {
       />
     </div>
   )
+}
+
+export default function ImageUpload({ value, onChange, valueMobile, onChangeMobile }: Props) {
+  if (onChangeMobile !== undefined) {
+    return (
+      <div className="grid grid-cols-2 gap-3">
+        <SingleUpload
+          value={value}
+          onChange={onChange}
+          label="Masaüstü"
+          Icon={Monitor}
+        />
+        <SingleUpload
+          value={valueMobile ?? ''}
+          onChange={onChangeMobile}
+          label="Mobil"
+          hint={!valueMobile ? ' — yüklenmezse masaüstü görseli' : ''}
+          Icon={Smartphone}
+        />
+      </div>
+    )
+  }
+
+  return <SingleUpload value={value} onChange={onChange} />
 }

@@ -17,7 +17,7 @@ export default function YeniKategoriPage() {
   const [error, setError] = useState('')
 
   const [form, setForm] = useState({
-    name: '', slug: '', description: '', gradient: 'category-gradient-1', image: '', count: '0', showInNav: true,
+    name: '', slug: '', description: '', gradient: 'category-gradient-1', image: '', imageMobile: '', count: '0', showInNav: true,
   })
 
   async function handleSubmit(e: React.FormEvent) {
@@ -70,7 +70,12 @@ export default function YeniKategoriPage() {
           </Field>
 
           <Field label="Görsel">
-            <ImageUpload value={form.image} onChange={(url) => setForm((f) => ({ ...f, image: url }))} />
+            <ImageUpload
+              value={form.image}
+              onChange={(url) => setForm((f) => ({ ...f, image: url }))}
+              valueMobile={form.imageMobile}
+              onChangeMobile={(url) => setForm((f) => ({ ...f, imageMobile: url }))}
+            />
           </Field>
 
           <Field label="Gradient Renk (görsel yoksa kullanılır)">

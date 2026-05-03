@@ -25,7 +25,7 @@ export default function DuzenleUrunPage({ params }: { params: { id: string } }) 
   const [form, setForm] = useState({
     name: '', price: '', originalPrice: '', category: '', categorySlug: '',
     description: '', details: '', sizes: '', colors: '',
-    gradient: 'product-gradient-1', image: '', images: [] as string[], badge: '', isNew: false, isBestseller: false,
+    gradient: 'product-gradient-1', image: '', imageMobile: '', images: [] as string[], badge: '', isNew: false, isBestseller: false,
   })
 
   useEffect(() => {
@@ -48,6 +48,7 @@ export default function DuzenleUrunPage({ params }: { params: { id: string } }) 
           colors: Array.isArray(p.colors) ? p.colors.join(', ') : p.colors,
           gradient: p.gradient,
           image: p.image || '',
+          imageMobile: p.imageMobile || '',
           images: p.images || [],
           badge: p.badge || '',
           isNew: p.isNew || false,
@@ -160,7 +161,12 @@ export default function DuzenleUrunPage({ params }: { params: { id: string } }) 
           <h2 className="text-white font-semibold">Görünüm & Etiketler</h2>
 
           <Field label="Ana Görsel">
-            <ImageUpload value={form.image} onChange={(url) => setForm((f) => ({ ...f, image: url }))} />
+            <ImageUpload
+              value={form.image}
+              onChange={(url) => setForm((f) => ({ ...f, image: url }))}
+              valueMobile={form.imageMobile}
+              onChangeMobile={(url) => setForm((f) => ({ ...f, imageMobile: url }))}
+            />
           </Field>
 
           <Field label="Galeri Görselleri (çoklu)">

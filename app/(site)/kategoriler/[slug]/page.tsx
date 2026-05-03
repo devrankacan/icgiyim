@@ -28,8 +28,11 @@ export default async function KategoriPage({ params }: { params: { slug: string 
     <div className="pt-28 pb-24">
       <div className={`relative ${category.image ? '' : category.gradient} py-28 mb-12`}>
         {category.image && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={category.image} alt={category.name} className="absolute inset-0 w-full h-full object-cover" />
+          <picture className="absolute inset-0 w-full h-full">
+            {category.imageMobile && <source media="(max-width: 767px)" srcSet={category.imageMobile} />}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={category.image} alt={category.name} className="w-full h-full object-cover" />
+          </picture>
         )}
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

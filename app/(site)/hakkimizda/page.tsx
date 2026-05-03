@@ -14,8 +14,11 @@ export default async function HakkimizdaPage() {
       {/* Hero */}
       <div className="relative category-gradient-1 py-32">
         {banners.hakkimizda_hero && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={banners.hakkimizda_hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <picture className="absolute inset-0 w-full h-full">
+            {banners.hakkimizda_hero_mobile && <source media="(max-width: 767px)" srcSet={banners.hakkimizda_hero_mobile} />}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={banners.hakkimizda_hero} alt="" className="w-full h-full object-cover" />
+          </picture>
         )}
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -52,8 +55,11 @@ export default async function HakkimizdaPage() {
             </div>
             <div className="relative">
               {banners.hakkimizda_hikaye ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={banners.hakkimizda_hikaye} alt="" className="aspect-[4/5] w-full object-cover" />
+                <picture>
+                  {banners.hakkimizda_hikaye_mobile && <source media="(max-width: 767px)" srcSet={banners.hakkimizda_hikaye_mobile} />}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={banners.hakkimizda_hikaye} alt="" className="aspect-[4/5] w-full object-cover" />
+                </picture>
               ) : (
                 <div className="aspect-[4/5] category-gradient-4" />
               )}
@@ -129,8 +135,11 @@ export default async function HakkimizdaPage() {
       {/* CTA */}
       <section className="relative category-gradient-1 py-24">
         {banners.hakkimizda_cta && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={banners.hakkimizda_cta} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <picture className="absolute inset-0 w-full h-full">
+            {banners.hakkimizda_cta_mobile && <source media="(max-width: 767px)" srcSet={banners.hakkimizda_cta_mobile} />}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={banners.hakkimizda_cta} alt="" className="w-full h-full object-cover" />
+          </picture>
         )}
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

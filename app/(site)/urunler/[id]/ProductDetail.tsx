@@ -23,6 +23,7 @@ export default function ProductDetail({ product, related }: { product: Product; 
     ...(product.image ? [product.image] : []),
     ...(product.images ?? []),
   ]
+  const mobileHeroImage = product.imageMobile || null
   const allImages = variantImage
     ? [variantImage, ...baseImages.filter((img) => img !== variantImage)]
     : baseImages
@@ -145,8 +146,11 @@ export default function ProductDetail({ product, related }: { product: Product; 
               onClick={() => allImages.length > 0 && setLightbox(activeIndex)}
             >
               {displayImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={displayImage} alt={product.name} className="w-full h-full object-cover" />
+                <picture>
+                  {activeIndex === 0 && mobileHeroImage && <source media="(max-width: 767px)" srcSet={mobileHeroImage} />}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={displayImage} alt={product.name} className="w-full h-full object-cover" />
+                </picture>
               ) : (
                 <div className={`w-full h-full ${product.gradient}`} />
               )}
