@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { unstable_noStore as noStore } from 'next/cache'
 
 export interface Product {
   id: string
@@ -132,6 +133,7 @@ const DEFAULT_DATA: Store = {
 }
 
 function readStore(): Store {
+  try { noStore() } catch { /* build-time context, ignore */ }
   try {
     if (!fs.existsSync(DATA_FILE)) {
       fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true })
