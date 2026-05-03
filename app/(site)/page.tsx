@@ -35,8 +35,8 @@ export default async function HomePage() {
           style={{ background: 'radial-gradient(circle, #C9967A 0%, transparent 70%)' }}
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-28 md:pt-32">
-          <div className="max-w-2xl lg:max-w-lg">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-16 pb-16 pt-28 md:pt-32">
+          <div className="max-w-md">
             <p className="text-xs text-accent tracking-[0.4em] uppercase font-sans mb-6 animate-fade-in">
               Yeni Koleksiyon — İlkbahar 2024
             </p>
