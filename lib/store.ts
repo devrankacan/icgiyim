@@ -42,6 +42,13 @@ export interface Category {
   showInNav?: boolean
 }
 
+export interface PopupSettings {
+  enabled: boolean
+  image: string
+  imageMobile?: string
+  delay: number
+}
+
 export interface BannerSettings {
   anasayfa_hero: string
   anasayfa_hero_mobile?: string
@@ -59,6 +66,14 @@ interface Store {
   products: Product[]
   categories: Category[]
   banners: BannerSettings
+  popup: PopupSettings
+}
+
+const DEFAULT_POPUP: PopupSettings = {
+  enabled: false,
+  image: '',
+  imageMobile: '',
+  delay: 1,
 }
 
 const DEFAULT_BANNERS: BannerSettings = {
@@ -73,6 +88,7 @@ const DATA_FILE = path.join(process.cwd(), 'data', 'store.json')
 
 const DEFAULT_DATA: Store = {
   banners: DEFAULT_BANNERS,
+  popup: DEFAULT_POPUP,
   categories: [
     { name: 'Setler', slug: 'setler', description: 'Uyumlu sutyen ve külot kombinasyonları', gradient: 'category-gradient-1', count: 24 },
     { name: 'Gecelikler', slug: 'gecelikler', description: 'İpeksi dokunuşlu gece kıyafetleri', gradient: 'category-gradient-2', count: 18 },
@@ -159,6 +175,7 @@ function readStore(): Store {
     }
     const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'))
     if (!data.banners) data.banners = DEFAULT_BANNERS
+    if (!data.popup) data.popup = DEFAULT_POPUP
     return data
   } catch {
     return DEFAULT_DATA
@@ -252,4 +269,15 @@ export function updateBanners(updates: Partial<BannerSettings>): BannerSettings 
   store.banners = { ...store.banners, ...updates }
   writeStore(store)
   return store.banners
+}
+
+export function getPopup(): PopupSettings {
+  return readStore().popup
+}
+
+export function updatePopup(updates: Partial<PopupSettings>): PopupSettings {
+  const store = readStore()
+  store.popup = { ...store.popup, ...updates }
+  writeStore(store)
+  return store.popup
 }
