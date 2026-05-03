@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { getCategories, createCategory } from '@/lib/store'
 
 export async function GET() {
@@ -11,5 +12,6 @@ export async function POST(req: NextRequest) {
     ...data,
     count: Number(data.count) || 0,
   })
+  revalidatePath('/', 'layout')
   return NextResponse.json(category, { status: 201 })
 }

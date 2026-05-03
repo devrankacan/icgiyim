@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { getProducts, createProduct } from '@/lib/store'
 
 export async function GET() {
@@ -15,5 +16,6 @@ export async function POST(req: NextRequest) {
     price: Number(data.price),
     originalPrice: data.originalPrice ? Number(data.originalPrice) : undefined,
   })
+  revalidatePath('/', 'layout')
   return NextResponse.json(product, { status: 201 })
 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { getProductById, updateProduct, deleteProduct } from '@/lib/store'
 
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
@@ -29,11 +30,13 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
   const updated = updateProduct(params.id, updates)
   if (!updated) return NextResponse.json({ error: 'Bulunamadı' }, { status: 404 })
+  revalidatePath('/', 'layout')
   return NextResponse.json(updated)
 }
 
 export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
   const ok = deleteProduct(params.id)
   if (!ok) return NextResponse.json({ error: 'Bulunamadı' }, { status: 404 })
+  revalidatePath('/', 'layout')
   return NextResponse.json({ success: true })
 }
