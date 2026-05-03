@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { ArrowRight, Star, Shield, Truck, RotateCcw } from 'lucide-react'
 import { headers } from 'next/headers'
 import ProductCard from '@/components/ProductCard'
-import { getProducts, getCategories, getBanners } from '@/lib/data'
+import HeroSlider from '@/components/HeroSlider'
+import { getProducts, getCategories, getBanners, getHeroSlides } from '@/lib/data'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,58 +12,13 @@ export default async function HomePage() {
   const products = getProducts()
   const categories = getCategories()
   const banners = getBanners()
+  const heroSlides = getHeroSlides()
   const featuredProducts = products.filter((p) => p.isBestseller || p.isNew).slice(0, 4)
   const newArrivals = products.filter((p) => p.isNew).slice(0, 4)
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-end overflow-hidden">
-        <div className="absolute inset-0 category-gradient-1" />
-        {banners.anasayfa_hero && (
-          <picture className="absolute inset-0 w-full h-full">
-            {banners.anasayfa_hero_mobile && <source media="(max-width: 767px)" srcSet={banners.anasayfa_hero_mobile} />}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={banners.anasayfa_hero} alt="" className="w-full h-full object-cover" />
-          </picture>
-        )}
-        <div className="absolute inset-0 hero-overlay" />
-
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, #D4AF37 0%, transparent 70%)' }}
-        />
-        <div className="absolute bottom-1/3 left-1/3 w-64 h-64 rounded-full opacity-5"
-          style={{ background: 'radial-gradient(circle, #C9967A 0%, transparent 70%)' }}
-        />
-
-        <div className="absolute bottom-12 left-4 sm:left-8 lg:left-16 xl:left-24 z-10 max-w-xs sm:max-w-sm lg:max-w-md">
-          <div>
-            <p className="text-xs text-accent tracking-[0.4em] uppercase font-sans mb-6 animate-fade-in">
-              Yeni Koleksiyon — İlkbahar 2024
-            </p>
-            <h1 className="font-serif text-5xl md:text-7xl font-medium text-white leading-[1.1] mb-6 animate-slide-up">
-              Kendinizi<br />
-              <em>Özel</em> Hissedin
-            </h1>
-            <p className="text-base md:text-lg text-gray-300 leading-relaxed mb-10 max-w-lg animate-slide-up font-sans">
-              Her kadının hak ettiği zarafet ve özgüven. Premium fantezi iç giyim koleksiyonumuzla tanışın.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
-              <Link href="/urunler" className="btn-primary">
-                Koleksiyonu Keşfet
-              </Link>
-              <Link href="/kategoriler/setler" className="btn-outline" style={{ borderColor: 'rgba(255,255,255,0.4)', color: 'white' }}>
-                Setleri Gör
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-fade-in">
-          <span className="text-[10px] text-gray-400 tracking-[0.3em] uppercase">Kaydır</span>
-          <div className="w-px h-10 bg-gradient-to-b from-gray-400 to-transparent" />
-        </div>
-      </section>
+      <HeroSlider slides={heroSlides} />
 
       {/* Features Strip */}
       <section className="bg-[var(--bg-subtle)] border-y border-[var(--border)]">

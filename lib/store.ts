@@ -42,6 +42,19 @@ export interface Category {
   showInNav?: boolean
 }
 
+export interface HeroSlide {
+  id: string
+  image: string
+  imageMobile?: string
+  badgeText?: string
+  title: string
+  subtitle?: string
+  btn1Text?: string
+  btn1Href?: string
+  btn2Text?: string
+  btn2Href?: string
+}
+
 export interface PopupSettings {
   enabled: boolean
   image: string
@@ -67,6 +80,7 @@ interface Store {
   categories: Category[]
   banners: BannerSettings
   popup: PopupSettings
+  heroSlides: HeroSlide[]
 }
 
 const DEFAULT_POPUP: PopupSettings = {
@@ -86,9 +100,24 @@ const DEFAULT_BANNERS: BannerSettings = {
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'store.json')
 
+const DEFAULT_HERO_SLIDES: HeroSlide[] = [
+  {
+    id: '1',
+    image: '',
+    badgeText: 'Yeni Koleksiyon — İlkbahar 2024',
+    title: 'Kendinizi\nÖzel Hissedin',
+    subtitle: 'Her kadının hak ettiği zarafet ve özgüven. Premium fantezi iç giyim koleksiyonumuzla tanışın.',
+    btn1Text: 'Koleksiyonu Keşfet',
+    btn1Href: '/urunler',
+    btn2Text: 'Setleri Gör',
+    btn2Href: '/kategoriler/setler',
+  },
+]
+
 const DEFAULT_DATA: Store = {
   banners: DEFAULT_BANNERS,
   popup: DEFAULT_POPUP,
+  heroSlides: DEFAULT_HERO_SLIDES,
   categories: [
     { name: 'Setler', slug: 'setler', description: 'Uyumlu sutyen ve külot kombinasyonları', gradient: 'category-gradient-1', count: 24 },
     { name: 'Gecelikler', slug: 'gecelikler', description: 'İpeksi dokunuşlu gece kıyafetleri', gradient: 'category-gradient-2', count: 18 },
@@ -176,6 +205,7 @@ function readStore(): Store {
     const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'))
     if (!data.banners) data.banners = DEFAULT_BANNERS
     if (!data.popup) data.popup = DEFAULT_POPUP
+    if (!data.heroSlides) data.heroSlides = DEFAULT_HERO_SLIDES
     return data
   } catch {
     return DEFAULT_DATA
@@ -280,4 +310,15 @@ export function updatePopup(updates: Partial<PopupSettings>): PopupSettings {
   store.popup = { ...store.popup, ...updates }
   writeStore(store)
   return store.popup
+}
+
+export function getHeroSlides(): HeroSlide[] {
+  return readStore().heroSlides
+}
+
+export function updateHeroSlides(slides: HeroSlide[]): HeroSlide[] {
+  const store = readStore()
+  store.heroSlides = slides
+  writeStore(store)
+  return slides
 }

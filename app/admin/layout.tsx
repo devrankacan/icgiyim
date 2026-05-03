@@ -2,12 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Package, Tag, Image, Layers, LogOut } from 'lucide-react'
+import { LayoutDashboard, Package, Tag, Image, Layers, SlidersHorizontal, LogOut } from 'lucide-react'
 
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/urunler', label: 'Ürünler', icon: Package },
   { href: '/admin/kategoriler', label: 'Kategoriler', icon: Tag },
+  { href: '/admin/hero', label: 'Hero Slider', icon: SlidersHorizontal },
   { href: '/admin/bannerlar', label: 'Bannerlar', icon: Image },
   { href: '/admin/popup', label: 'Pop-up', icon: Layers },
 ]
