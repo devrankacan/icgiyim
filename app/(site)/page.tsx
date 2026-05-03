@@ -36,7 +36,7 @@ export default async function HomePage() {
         />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-28 md:pt-32">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl lg:max-w-lg">
             <p className="text-xs text-accent tracking-[0.4em] uppercase font-sans mb-6 animate-fade-in">
               Yeni Koleksiyon — İlkbahar 2024
             </p>
