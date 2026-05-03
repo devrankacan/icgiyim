@@ -68,7 +68,7 @@ export default function HeroSlider({ slides }: Props) {
 
       {/* Text */}
       <div
-        className="absolute bottom-12 left-4 sm:left-8 lg:left-16 xl:left-24 z-10 max-w-xs sm:max-w-sm lg:max-w-md"
+        className="absolute bottom-12 left-4 sm:left-12 lg:left-24 xl:left-32 z-10 max-w-xs sm:max-w-sm lg:max-w-md"
         style={{ opacity: animating ? 0 : 1, transform: animating ? 'translateY(12px)' : 'translateY(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' }}
       >
         {slide.badgeText && (
@@ -128,13 +128,6 @@ export default function HeroSlider({ slides }: Props) {
         </div>
       )}
 
-      {/* Scroll indicator — single slide only */}
-      {slides.length === 1 && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <span className="text-[10px] text-gray-400 tracking-[0.3em] uppercase">Kaydır</span>
-          <div className="w-px h-10 bg-gradient-to-b from-gray-400 to-transparent" />
-        </div>
-      )}
     </section>
   )
 }
