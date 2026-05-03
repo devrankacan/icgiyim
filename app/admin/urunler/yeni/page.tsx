@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
@@ -14,26 +14,18 @@ const GRADIENTS = [
   'product-gradient-5', 'product-gradient-6', 'product-gradient-7', 'product-gradient-8',
 ]
 
-const CATEGORY_OPTIONS = [
-  { name: 'Setler', slug: 'setler' },
-  { name: 'Gecelikler', slug: 'gecelikler' },
-  { name: 'Babydoll', slug: 'babydoll' },
-  { name: 'Kostümler', slug: 'kostumler' },
-  { name: 'Korse & Bustier', slug: 'korse' },
-  { name: 'Jartiyer & Çoraplar', slug: 'jartiyer' },
-]
-
 export default function YeniUrunPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [categoryOptions, setCategoryOptions] = useState<{ name: string; slug: string }[]>([])
 
   const [form, setForm] = useState({
     name: '',
     price: '',
     originalPrice: '',
-    category: 'Setler',
-    categorySlug: 'setler',
+    category: '',
+    categorySlug: '',
     description: '',
     details: '',
     sizes: '',
@@ -47,8 +39,17 @@ export default function YeniUrunPage() {
   })
   const [variants, setVariants] = useState<Variant[]>([])
 
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((r) => r.json())
+      .then((cats: { name: string; slug: string }[]) => {
+        setCategoryOptions(cats)
+        if (cats.length > 0) setForm((f) => f.category ? f : { ...f, category: cats[0].name, categorySlug: cats[0].slug })
+      })
+  }, [])
+
   function handleCategoryChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const cat = CATEGORY_OPTIONS.find((c) => c.slug === e.target.value)
+    const cat = categoryOptions.find((c) => c.slug === e.target.value)
     if (cat) setForm((f) => ({ ...f, category: cat.name, categorySlug: cat.slug }))
   }
 
@@ -118,12 +119,8 @@ export default function YeniUrunPage() {
           </div>
 
           <Field label="Kategori">
-            <select
-              value={form.categorySlug}
-              onChange={handleCategoryChange}
-              className={inputCls}
-            >
-              {CATEGORY_OPTIONS.map((c) => (
+            <select value={form.categorySlug} onChange={handleCategoryChange} className={inputCls}>
+              {categoryOptions.map((c) => (
                 <option key={c.slug} value={c.slug}>{c.name}</option>
               ))}
             </select>

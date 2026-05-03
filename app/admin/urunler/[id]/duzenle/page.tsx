@@ -14,27 +14,23 @@ const GRADIENTS = [
   'product-gradient-5', 'product-gradient-6', 'product-gradient-7', 'product-gradient-8',
 ]
 
-const CATEGORY_OPTIONS = [
-  { name: 'Setler', slug: 'setler' },
-  { name: 'Gecelikler', slug: 'gecelikler' },
-  { name: 'Babydoll', slug: 'babydoll' },
-  { name: 'Kostümler', slug: 'kostumler' },
-  { name: 'Korse & Bustier', slug: 'korse' },
-  { name: 'Jartiyer & Çoraplar', slug: 'jartiyer' },
-]
-
 export default function DuzenleUrunPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(true)
   const [error, setError] = useState('')
   const [variants, setVariants] = useState<Variant[]>([])
+  const [categoryOptions, setCategoryOptions] = useState<{ name: string; slug: string }[]>([])
 
   const [form, setForm] = useState({
     name: '', price: '', originalPrice: '', category: '', categorySlug: '',
     description: '', details: '', sizes: '', colors: '',
     gradient: 'product-gradient-1', image: '', images: [] as string[], badge: '', isNew: false, isBestseller: false,
   })
+
+  useEffect(() => {
+    fetch('/api/categories').then((r) => r.json()).then(setCategoryOptions)
+  }, [])
 
   useEffect(() => {
     fetch(`/api/products/${params.id}`)
@@ -63,7 +59,7 @@ export default function DuzenleUrunPage({ params }: { params: { id: string } }) 
   }, [params.id])
 
   function handleCategoryChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const cat = CATEGORY_OPTIONS.find((c) => c.slug === e.target.value)
+    const cat = categoryOptions.find((c) => c.slug === e.target.value)
     if (cat) setForm((f) => ({ ...f, category: cat.name, categorySlug: cat.slug }))
   }
 
@@ -125,7 +121,7 @@ export default function DuzenleUrunPage({ params }: { params: { id: string } }) 
 
           <Field label="Kategori">
             <select value={form.categorySlug} onChange={handleCategoryChange} className={inputCls}>
-              {CATEGORY_OPTIONS.map((c) => (
+              {categoryOptions.map((c) => (
                 <option key={c.slug} value={c.slug}>{c.name}</option>
               ))}
             </select>
