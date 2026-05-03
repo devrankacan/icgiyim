@@ -4,17 +4,13 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Menu, X, ShoppingBag, Search, Heart } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
+import { Category } from '@/lib/data'
 
-const navLinks = [
-  { href: '/urunler', label: 'Ürünler' },
-  { href: '/kategoriler/setler', label: 'Setler' },
-  { href: '/kategoriler/gecelikler', label: 'Gecelikler' },
-  { href: '/kategoriler/kostumler', label: 'Kostümler' },
-  { href: '/hakkimizda', label: 'Hakkımızda' },
-  { href: '/iletisim', label: 'İletişim' },
-]
+interface NavbarProps {
+  categories?: Category[]
+}
 
-export default function Navbar() {
+export default function Navbar({ categories = [] }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -50,16 +46,25 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
+          <nav className="hidden lg:flex items-center gap-6">
+            <Link href="/urunler" className={`text-sm font-medium tracking-widest uppercase transition-colors duration-200 hover:text-accent ${scrolled ? 'text-secondary' : 'text-white/80 hover:text-white'}`}>
+              Ürünler
+            </Link>
+            {categories.map((cat) => (
               <Link
-                key={link.href}
-                href={link.href}
+                key={cat.slug}
+                href={`/kategoriler/${cat.slug}`}
                 className={`text-sm font-medium tracking-widest uppercase transition-colors duration-200 hover:text-accent ${scrolled ? 'text-secondary' : 'text-white/80 hover:text-white'}`}
               >
-                {link.label}
+                {cat.name}
               </Link>
             ))}
+            <Link href="/hakkimizda" className={`text-sm font-medium tracking-widest uppercase transition-colors duration-200 hover:text-accent ${scrolled ? 'text-secondary' : 'text-white/80 hover:text-white'}`}>
+              Hakkımızda
+            </Link>
+            <Link href="/iletisim" className={`text-sm font-medium tracking-widest uppercase transition-colors duration-200 hover:text-accent ${scrolled ? 'text-secondary' : 'text-white/80 hover:text-white'}`}>
+              İletişim
+            </Link>
           </nav>
 
           {/* Actions */}
@@ -89,16 +94,14 @@ export default function Navbar() {
       {menuOpen && (
         <div className="lg:hidden bg-[var(--bg)] border-t border-[var(--border)] animate-fade-in">
           <nav className="flex flex-col px-6 py-6 gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="nav-link text-base"
-                onClick={() => setMenuOpen(false)}
-              >
-                {link.label}
+            <Link href="/urunler" className="nav-link text-base" onClick={() => setMenuOpen(false)}>Ürünler</Link>
+            {categories.map((cat) => (
+              <Link key={cat.slug} href={`/kategoriler/${cat.slug}`} className="nav-link text-base" onClick={() => setMenuOpen(false)}>
+                {cat.name}
               </Link>
             ))}
+            <Link href="/hakkimizda" className="nav-link text-base" onClick={() => setMenuOpen(false)}>Hakkımızda</Link>
+            <Link href="/iletisim" className="nav-link text-base" onClick={() => setMenuOpen(false)}>İletişim</Link>
           </nav>
         </div>
       )}
