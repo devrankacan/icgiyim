@@ -1,19 +1,105 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { ChevronRight, Heart, Share2, Shield, Truck, RotateCcw } from 'lucide-react'
+import { ChevronRight, ChevronLeft, Heart, Share2, Shield, Truck, RotateCcw, X, ZoomIn } from 'lucide-react'
 import { Product, Variant } from '@/lib/data'
 
 export default function ProductDetail({ product, related }: { product: Product; related: Product[] }) {
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [lightbox, setLightbox] = useState<number | null>(null)
 
-  const displayImage = selectedVariant?.image || product.image
+  const variantImage = selectedVariant?.image
+  const baseImages = [
+    ...(product.image ? [product.image] : []),
+    ...(product.images ?? []),
+  ]
+  const allImages = variantImage
+    ? [variantImage, ...baseImages.filter((img) => img !== variantImage)]
+    : baseImages
+
+  const displayImage = allImages[activeIndex] ?? null
   const displayPrice = selectedVariant?.price ?? product.price
   const displayFeatures = selectedVariant?.features?.length ? selectedVariant.features : product.details
 
+  function selectVariant(v: Variant) {
+    const same = selectedVariant?.id === v.id
+    setSelectedVariant(same ? null : v)
+    setActiveIndex(0)
+  }
+
+  const lightboxPrev = useCallback(() => setLightbox((i) => (i !== null ? (i - 1 + allImages.length) % allImages.length : null)), [allImages.length])
+  const lightboxNext = useCallback(() => setLightbox((i) => (i !== null ? (i + 1) % allImages.length : null)), [allImages.length])
+
+  useEffect(() => {
+    if (lightbox === null) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setLightbox(null)
+      if (e.key === 'ArrowLeft') lightboxPrev()
+      if (e.key === 'ArrowRight') lightboxNext()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [lightbox, lightboxPrev, lightboxNext])
+
   return (
     <div className="pt-28 pb-24">
+      {/* Lightbox */}
+      {lightbox !== null && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+            onClick={() => setLightbox(null)}
+            aria-label="Kapat"
+          >
+            <X size={28} />
+          </button>
+
+          {allImages.length > 1 && (
+            <>
+              <button
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 hover:bg-white/20 flex items-center justify-center rounded-full transition-colors"
+                onClick={(e) => { e.stopPropagation(); lightboxPrev() }}
+                aria-label="Önceki"
+              >
+                <ChevronLeft size={22} className="text-white" />
+              </button>
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 hover:bg-white/20 flex items-center justify-center rounded-full transition-colors"
+                onClick={(e) => { e.stopPropagation(); lightboxNext() }}
+                aria-label="Sonraki"
+              >
+                <ChevronRight size={22} className="text-white" />
+              </button>
+            </>
+          )}
+
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={allImages[lightbox]}
+            alt={`${product.name} ${lightbox + 1}`}
+            className="max-h-[90vh] max-w-[90vw] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {allImages.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              {allImages.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={(e) => { e.stopPropagation(); setLightbox(i) }}
+                  className={`w-2 h-2 rounded-full transition-colors ${i === lightbox ? 'bg-white' : 'bg-white/40'}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
         <nav className="flex items-center gap-2 text-xs text-muted">
           <Link href="/" className="hover:text-accent transition-colors duration-200">Ana Sayfa</Link>
@@ -30,21 +116,38 @@ export default function ProductDetail({ product, related }: { product: Product; 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           {/* Images */}
           <div className="space-y-4">
-            <div className="aspect-[3/4] w-full overflow-hidden">
+            <div
+              className="relative aspect-[3/4] w-full overflow-hidden cursor-zoom-in group"
+              onClick={() => allImages.length > 0 && setLightbox(activeIndex)}
+            >
               {displayImage ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={displayImage} alt={product.name} className="w-full h-full object-cover" />
               ) : (
                 <div className={`w-full h-full ${product.gradient}`} />
               )}
+              {allImages.length > 0 && (
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center">
+                  <ZoomIn size={32} className="text-white opacity-0 group-hover:opacity-80 transition-opacity duration-200" />
+                </div>
+              )}
             </div>
-            {product.images && product.images.length > 0 && (
+
+            {allImages.length > 1 && (
               <div className="grid grid-cols-4 gap-3">
-                {product.images.slice(0, 4).map((img, i) => (
-                  <div key={i} className="aspect-square overflow-hidden cursor-pointer opacity-60 hover:opacity-100 transition-opacity duration-200">
+                {allImages.slice(0, 8).map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveIndex(i)}
+                    className={`aspect-square overflow-hidden transition-all duration-200 ${
+                      i === activeIndex
+                        ? 'ring-2 ring-accent opacity-100'
+                        : 'opacity-50 hover:opacity-100'
+                    }`}
+                  >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={img} alt={`${product.name} ${i + 1}`} className="w-full h-full object-cover" />
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
@@ -80,7 +183,7 @@ export default function ProductDetail({ product, related }: { product: Product; 
                   {product.variants.map((v) => (
                     <button
                       key={v.id}
-                      onClick={() => setSelectedVariant(selectedVariant?.id === v.id ? null : v)}
+                      onClick={() => selectVariant(v)}
                       className={`px-4 py-2 text-xs border transition-all duration-200 ${
                         selectedVariant?.id === v.id
                           ? 'border-accent text-accent bg-accent/10'
