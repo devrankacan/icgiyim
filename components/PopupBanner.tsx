@@ -25,27 +25,29 @@ export default function PopupBanner({ image, imageMobile, delay }: Props) {
   function close() {
     setVisible(false)
     sessionStorage.setItem('popup_seen', '1')
-    setTimeout(() => setMounted(false), 400)
+    setTimeout(() => setMounted(false), 500)
   }
 
   if (!mounted) return null
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-400 ${
+      style={{ transition: 'background-color 0.5s ease, backdrop-filter 0.5s ease' }}
+      className={`fixed inset-0 z-[100] flex items-center justify-center p-4 ${
         visible ? 'bg-black/60 backdrop-blur-sm' : 'bg-black/0 backdrop-blur-none pointer-events-none'
       }`}
       onClick={close}
     >
       <div
-        className={`relative max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl transition-all duration-400 ${
-          visible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-8'
+        style={{ transition: 'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+        className={`relative max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl ${
+          visible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-10'
         }`}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={close}
-          className="absolute top-3 right-3 z-10 w-9 h-9 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors"
+          className="absolute top-3 right-3 z-10 w-9 h-9 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors duration-200"
           aria-label="Kapat"
         >
           <X size={18} className="text-white" />
