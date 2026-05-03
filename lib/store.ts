@@ -149,8 +149,11 @@ function readStore(): Store {
 }
 
 function writeStore(data: Store): void {
-  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true })
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2))
+  const dir = path.dirname(DATA_FILE)
+  fs.mkdirSync(dir, { recursive: true })
+  const tmp = DATA_FILE + '.tmp'
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2))
+  fs.renameSync(tmp, DATA_FILE)
 }
 
 export function getProducts(): Product[] {

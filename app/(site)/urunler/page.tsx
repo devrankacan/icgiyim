@@ -1,5 +1,6 @@
 import ProductCard from '@/components/ProductCard'
 import { getProducts, getCategories } from '@/lib/data'
+import { headers } from 'next/headers'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -9,7 +10,8 @@ export const metadata = {
   description: 'Premium fantezi iç giyim koleksiyonumuzu keşfedin.',
 }
 
-export default function UrunlerPage() {
+export default async function UrunlerPage() {
+  headers()
   const products = getProducts()
   const categories = getCategories()
 

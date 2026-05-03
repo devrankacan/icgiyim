@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
+import { headers } from 'next/headers'
 import { getCategoryBySlug, getProductsByCategory, getCategories } from '@/lib/data'
 import ProductCard from '@/components/ProductCard'
 
@@ -15,7 +16,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default function KategoriPage({ params }: { params: { slug: string } }) {
+export default async function KategoriPage({ params }: { params: { slug: string } }) {
+  headers()
   const category = getCategoryBySlug(params.slug)
   if (!category) notFound()
 

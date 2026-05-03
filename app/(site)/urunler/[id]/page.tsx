@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronRight, Heart, Share2, Shield, Truck, RotateCcw } from 'lucide-react'
+import { headers } from 'next/headers'
 import { getProductById, getProducts } from '@/lib/data'
 import ProductCard from '@/components/ProductCard'
 
@@ -15,7 +16,8 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   }
 }
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
+export default async function ProductDetailPage({ params }: { params: { id: string } }) {
+  headers()
   const product = getProductById(params.id)
   if (!product) notFound()
 

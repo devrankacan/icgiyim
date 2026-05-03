@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { ArrowRight, Star, Shield, Truck, RotateCcw } from 'lucide-react'
+import { headers } from 'next/headers'
 import ProductCard from '@/components/ProductCard'
 import { getProducts, getCategories, getBanners } from '@/lib/data'
 
 export const dynamic = 'force-dynamic'
 
-export default function HomePage() {
+export default async function HomePage() {
+  headers()
   const products = getProducts()
   const categories = getCategories()
   const banners = getBanners()

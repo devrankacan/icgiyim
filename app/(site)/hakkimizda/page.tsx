@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import { Heart, Star, Shield, Sparkles } from 'lucide-react'
+import { headers } from 'next/headers'
 import { getBanners } from '@/lib/data'
 
 export const dynamic = 'force-dynamic'
 
-export default function HakkimizdaPage() {
+export default async function HakkimizdaPage() {
+  headers()
   const banners = getBanners()
 
   return (
