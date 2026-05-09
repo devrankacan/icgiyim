@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: 'Aura Homewears | Premium Fantezi İç Giyim',
   description: 'Aura Homewears ile kendinizi özel hissedin. Premium fantezi iç giyim, gecelikler, babydoll ve kostüm koleksiyonları.',
   keywords: 'fantezi iç giyim, lingerie, babydoll, gecelik, korse, premium iç giyim',
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({
